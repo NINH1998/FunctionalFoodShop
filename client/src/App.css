@@ -1,0 +1,104 @@
+@import url('https://fonts.googleapis.com/css2?family=Arima:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    html {
+        @apply m-0;
+    }
+    body {
+        @apply font-arima;
+    }
+
+    h1 {
+        @apply text-4xl font-bold;
+    }
+
+    h2 {
+        @apply text-3xl mb-2 font-bold;
+    }
+
+    h3 {
+        @apply text-xl font-bold;
+    }
+
+    h4 {
+        @apply text-base font-semibold;
+    }
+    strong {
+        @apply mr-2;
+    }
+}
+
+@layer components {
+    /* BTN*/
+
+    .google-btn {
+        @apply shadow-sm mt-4 shadow-gray-500 text-sm bg-red-600 hover:bg-red-500 text-white font-semibold py-1 px-2 rounded animation-200;
+    }
+
+    .btn-primary {
+        @apply flex items-center p-2 bg-primary rounded-md hover:bg-secondary text-white font-semibold select-none cursor-pointer animation-200;
+    }
+
+    .link-btn-primary {
+        @apply hover:underline ml-1 text-primary cursor-pointer;
+    }
+
+    .calc-btn {
+        @apply flex items-center p-3 border-[1px] hover:bg-gray-200 animation-200 cursor-pointer select-none;
+    }
+
+    .paginate-btn {
+        @apply flex items-center justify-center w-10 h-10 hover:bg-lime-500 animation-200 rounded-full bg-primary;
+    }
+
+    .breadcrumb-link-btn {
+        @apply hover:!text-secondary hover:!bg-transparent text-base font-semibold !text-gray-400 !h-auto;
+    }
+
+    /* EFFECT */
+    .thumbnail_animation {
+        @apply transition-all duration-500 ease-out top-0 left-0 w-full hover:opacity-[1] hover:scale-105;
+    }
+
+    .animation {
+        @apply transition-all duration-300 ease-linear;
+    }
+
+    .animation-200 {
+        @apply transition-all duration-200 ease-linear;
+    }
+
+    .animation-100 {
+        @apply transition-all duration-100 ease-linear;
+    }
+
+    /* TEXT , FONT*/
+
+    .text-primary {
+        @apply text-main;
+    }
+
+    .text-secondary {
+        @apply text-lime-500;
+    }
+
+    .bg-primary {
+        @apply bg-main;
+    }
+
+    .bg-secondary {
+        @apply bg-lime-500;
+    }
+
+    .border-primary {
+        @apply border-main;
+    }
+
+    .border-secondary {
+        @apply border-lime-500;
+    }
+}

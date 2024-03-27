@@ -1,0 +1,10 @@
+export { default as CartPage } from './CartPage';
+export { default as DefaultPage } from './DefaultPage';
+export { default as DetailProductPage } from './DetailProductPage';
+export { default as ContactPage } from './ContactPage/ContactPage';
+export { default as MainPage } from './MainPage';
+export { default as ProductsPage } from './FilterProductsPage';
+export { default as PublicPage } from './PublicPage';
+export { default as ResetPasswordPage } from './ResetPasswordPage';
+export { default as BreadCrumb } from './BreadCrumb';
+export { default as CheckoutPage } from './CheckoutPage';

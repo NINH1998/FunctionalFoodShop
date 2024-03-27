@@ -1,0 +1,202 @@
+html *::-webkit-scrollbar {
+    border-radius: 0;
+    width: 8px;
+    height: 8px;
+}
+
+html *::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.15);
+}
+
+html *::-webkit-scrollbar-track {
+    border-radius: 0;
+    background-color: transparent;
+}
+
+.swiper-container {
+    width: 1200px !important;
+}
+
+.swiper-slide-thumb-active .sub-swiper-iteam {
+    opacity: 1 !important;
+    border: 2px solid;
+    border-color: #84cc16;
+}
+
+/*............................... Detail Product Slider ........................*/
+
+.main-swiper .swiper-button-next {
+    top: 50%;
+    right: 10px;
+    width: 45px;
+    height: 45px;
+    background-color: white;
+    opacity: 0.5;
+    border-radius: 999px;
+    box-shadow: 0 2px 6px 2px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s ease;
+}
+
+.main-swiper .swiper-button-prev {
+    top: 50%;
+    left: 10px;
+    width: 45px;
+    height: 45px;
+    background-color: white;
+    opacity: 0.5;
+    border-radius: 999px;
+    box-shadow: 0 2px 6px 2px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s ease;
+}
+
+.main-swiper .swiper-button-next:after {
+    content: '\276F';
+    font-size: 35px;
+    color: #65a30d;
+}
+
+.main-swiper .swiper-button-prev:after {
+    content: '\276E';
+    font-size: 35px;
+    color: #65a30d;
+}
+
+.swiper-button-next:hover {
+    opacity: 1;
+}
+
+.swiper-button-prev:hover {
+    opacity: 1;
+}
+
+.react-transform-wrapper {
+    overflow: visible;
+}
+/* .............................sub-swiper.......................... */
+
+.sub-swiper .swiper-button-next {
+    top: 50%;
+    right: 10px;
+    width: 45px;
+    height: 45px;
+    background-color: white;
+    opacity: 0.5;
+    border-radius: 999px;
+    box-shadow: 0 2px 6px 2px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s ease;
+}
+
+.sub-swiper .swiper-button-prev {
+    top: 50%;
+    left: 10px;
+    width: 45px;
+    height: 45px;
+    background-color: white;
+    opacity: 0.5;
+    border-radius: 999px;
+    box-shadow: 0 2px 6px 2px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s ease;
+}
+
+.sub-swiper .swiper-button-next:after {
+    content: '\276F';
+    font-size: 35px;
+    color: #65a30d;
+}
+
+.sub-swiper .swiper-button-prev:after {
+    content: '\276E';
+    font-size: 35px;
+    color: #65a30d;
+}
+
+.swiper-button-next:hover {
+    opacity: 1;
+}
+
+.swiper-button-prev:hover {
+    opacity: 1;
+}
+
+/*.................... HEADER..................... */
+
+.header-swiper .swiper-button-next {
+    right: 40px;
+}
+
+.header-swiper .swiper-button-prev {
+    left: 40px;
+}
+
+.header-swiper .swiper-button-next:after {
+    content: '\276F';
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 80px;
+    font-weight: normal;
+    transition: all 0.3s ease;
+}
+
+.header-swiper .swiper-button-prev:after {
+    content: '\276E';
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 80px;
+    font-weight: normal;
+    transition: all 0.3s ease;
+}
+
+.header-swiper .swiper-button-next:hover:after {
+    color: #65a30d;
+}
+
+.header-swiper .swiper-button-prev:hover:after {
+    color: #65a30d;
+}
+
+/* .................PRODUCT SLIDE................ */
+
+.products .swiper-button-next {
+    top: 35%;
+    right: 10px;
+    width: 50px;
+    height: 50px;
+    background-color: white;
+    opacity: 0.5;
+    border-radius: 999px;
+    box-shadow: 0 2px 6px 2px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.products .swiper-button-prev {
+    top: 35%;
+    left: 10px;
+    width: 50px;
+    height: 50px;
+    background-color: white;
+    opacity: 0.5;
+    border-radius: 999px;
+    box-shadow: 0 2px 6px 2px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.products .swiper-button-next:after {
+    content: '\276F';
+    font-size: 40px;
+    color: #65a30d;
+}
+
+.products .swiper-button-prev:after {
+    content: '\276E';
+    font-size: 40px;
+    color: #65a30d;
+}
+
+.products .swiper-button-next:hover {
+    opacity: 1;
+}
+
+.products .swiper-button-prev:hover {
+    opacity: 1;
+}
+
+/* ..................................................... */
