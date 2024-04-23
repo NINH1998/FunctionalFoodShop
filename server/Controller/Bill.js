@@ -95,7 +95,6 @@ const createBill = async (req, res) => {
         );
         res.status(200).json({ success: true, message: 'Thanh toán thành công' });
     } catch (error) {
-        console.log(error);
         res.status(500).json({ success: false, message: 'Thanh toán thất bại' });
     }
 };

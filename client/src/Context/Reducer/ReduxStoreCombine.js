@@ -5,6 +5,7 @@ import productState from './Products/ProductsAction';
 import userState from './User/UserAction';
 import appState from './AppState/CommonAction';
 import googleLogin from './LoginGooole/LoginGoogleAction';
+import tagProductState from './TagProduct/TagProductAction';
 
 export const store = configureStore({
     reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
         googleLoginReducer: googleLogin,
         categoriesReducer: categories,
         productsReducer: productState,
+        tagReducer: tagProductState,
         userReducer: userState,
     },
     middleware: (getDefaultMiddleware) =>

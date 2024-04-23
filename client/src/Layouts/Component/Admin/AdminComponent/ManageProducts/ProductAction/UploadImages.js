@@ -42,7 +42,7 @@ const UploadImages = ({ setPreview, preview }) => {
     return (
         <>
             <div className="mt-4">
-                <div className="font-semibold">Tải ảnh đại diện:</div>
+                <div className="text-sm font-semibold">Tải ảnh đại diện:</div>
                 <div className="flex gap-2">
                     <div
                         {...getRootPropsSingle()}
@@ -72,7 +72,7 @@ const UploadImages = ({ setPreview, preview }) => {
                 </div>
             </div>
             <div className="mt-4">
-                <div className="font-semibold">Tải nhiều hình ảnh:</div>
+                <div className="text-sm font-semibold">Tải nhiều hình ảnh:</div>
                 <div className="flex gap-2">
                     <div
                         {...getRootPropsMultiple()}

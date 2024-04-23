@@ -17,7 +17,7 @@ const RatingProductFunction = ({ pid, productName, ratings, totalRatings, setUpd
         async ({ comment, score }) => {
             const response = await apiRating({ star: score, comment, pid, commentAt: Date.now() });
             if (response.success) {
-                Swal.fire('Opps!', 'Bạn chưa nhập đánh giá', 'error');
+                Swal.fire('', response.message, 'success');
             }
             setUpdateRating(Math.random());
         },

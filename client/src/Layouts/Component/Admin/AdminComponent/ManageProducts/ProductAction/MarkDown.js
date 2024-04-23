@@ -4,7 +4,7 @@ import { Editor } from '@tinymce/tinymce-react';
 const MarkDown = ({ label, value, changeValue, name }) => {
     return (
         <div className="flex flex-col mt-4">
-            <label className="text-sm">{label}</label>
+            <label className="text-sm font-semibold">{label}</label>
             <Editor
                 apiKey={process.env.REACT_APP_TINYMCE}
                 initialValue={value}

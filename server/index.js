@@ -16,8 +16,11 @@ const Brand = require('./Routes/Brand');
 const Coupon = require('./Routes/Coupon');
 const Bill = require('./Routes/Bill');
 const Comments = require('./Routes/Comments');
+const Insert = require('./Routes/ScrapersData');
+const Tag = require('./Routes/Tag');
+
 const passportRouter = require('./Routes/Passport');
-const scheduleDailyDiscountTask = require('./Schedule/DiscountTime');
+const { scheduleWeekTask, scheduleDailyTask } = require('./Schedule/ScheduleDailyTask');
 
 env.config();
 
@@ -37,7 +40,10 @@ const connectDB = async () => {
     }
 };
 connectDB();
-scheduleDailyDiscountTask();
+
+// Chạy lịch trình công việc
+scheduleWeekTask();
+scheduleDailyTask();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -63,6 +69,8 @@ app.use('/api/blog', Blog);
 app.use('/api/brand', Brand);
 app.use('/api/coupon', Coupon);
 app.use('/api/bill', Bill);
+app.use('/api/insert', Insert);
+app.use('/api/tag', Tag);
 
 const PORT = 5000;
 app.listen(PORT, () => console.log(`listening on port ${PORT}`));

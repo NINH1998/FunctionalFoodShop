@@ -9,10 +9,10 @@ const ShoppingCartIcon = ({ current, setOpenCartModal, useSelector }) => {
 
     return (
         <div
-            className="flex relative items-center cursor-pointer hover:scale-110 animation-200"
+            className="flex relative items-center cursor-pointer hover:scale-110 animation-200 font-roboto"
             onClick={() => setOpenCartModal(true)}
         >
-            <TiShoppingCart size="28px" color="#65a30d" />
+            <TiShoppingCart size={28} color="#65a30d" />
             {(current ? current?.cart?.length : cartSession?.length) > 0 && (
                 <span className="flex absolute top-[-5px] right-[-5px]">
                     <span className="animate-ping absolute inline-flex p-2 h-3 w-3 rounded-full bg-red-400 opacity-75"></span>

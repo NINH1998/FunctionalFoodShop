@@ -41,7 +41,6 @@ router.put(
     ]),
     Product.updateProduct,
 );
-router.put('/upimage/:pid', [verifyAccessToken, isAdmin], upload.array('images'), Product.uploadImgProduct);
 
 router.delete('/:pid', [verifyAccessToken, isAdmin], Product.deleteProduct);
 

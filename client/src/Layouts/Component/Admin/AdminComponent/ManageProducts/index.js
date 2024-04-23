@@ -1,18 +1,18 @@
 import { useCallback, useLayoutEffect, useState } from 'react';
 import { useSearchParams, createSearchParams } from 'react-router-dom';
 import { apiDeleteProduct, apiGetProducts } from 'Context/StoreApi';
-import { Pagination, Space } from 'antd';
 import { InputField, Loading } from 'Layouts/Component/public/Common';
+import { Pagination, Space } from 'antd';
 import ProductsTable from './ProductsTable';
 import withComponent from 'Hocs/withComponent';
-import UpdateProduct from './UpdateProduct';
+import UpdateProduct from './ProductAction/UpdateProduct';
 import useDebounce from 'Hooks/useDebounce';
 import Swal from 'sweetalert2';
 
 const ManageProducts = ({ navigate, location }) => {
     const [params] = useSearchParams();
-    const [currentPage, setCurrentPage] = useState(1);
-    const [products, setProduct] = useState(null);
+    const [currentPage, setCurrentPage] = useState(Object.fromEntries([...params]).page || 1);
+    const [products, setProducts] = useState(null);
     const [counts, setCounts] = useState(null);
     const [value, setValue] = useState({ q: '' });
     const [isLoading, setIsLoading] = useState(false);
@@ -28,7 +28,7 @@ const ManageProducts = ({ navigate, location }) => {
         const response = await apiGetProducts(data);
         setIsLoading(false);
         if (response.success) {
-            setProduct(response.products);
+            setProducts(response.products);
             setCounts(response.counts);
         }
     };
@@ -44,7 +44,8 @@ const ManageProducts = ({ navigate, location }) => {
                 },
                 { replace: true },
             );
-            handleSearchProduct({ page: 1, q: debounceValue });
+            setCurrentPage(1);
+            handleSearchProduct({ q: debounceValue });
         } else {
             delete queries.q;
             navigate(
@@ -54,7 +55,7 @@ const ManageProducts = ({ navigate, location }) => {
                 },
                 { replace: true },
             );
-            handleSearchProduct({ ...queries, page: currentPage });
+            handleSearchProduct({ ...queries });
         }
         // eslint-disable-next-line
     }, [debounceValue, update, currentPage]);
@@ -110,7 +111,7 @@ const ManageProducts = ({ navigate, location }) => {
                 ) : (
                     <Space direction="vertical" className="w-full">
                         {counts === 0 ? (
-                            <p className="italic">Không tìm thấy sản phẩm nào</p>
+                            <p className="italic text-center">Không tìm thấy sản phẩm nào</p>
                         ) : (
                             <div className="w-full m-auto overflow-x-auto">
                                 <ProductsTable

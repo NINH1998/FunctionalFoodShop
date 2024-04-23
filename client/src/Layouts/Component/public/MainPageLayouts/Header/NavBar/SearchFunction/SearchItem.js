@@ -1,6 +1,6 @@
 import { createSlug } from 'Ultils/helper';
 import { Link } from 'react-router-dom';
-import React, { memo } from 'react';
+import { memo } from 'react';
 
 const SearchItem = ({ el, setIsSearch, setSearchValue }) => {
     const handleSearchResult = () => {

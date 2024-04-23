@@ -1,17 +1,22 @@
 import { setInvalidField } from 'Context/Reducer/AppState/CommonAction';
 import { Icons } from 'Layouts/Assets/icons';
+import slugify from 'slugify';
 
 const { AiFillStar, AiOutlineStar } = Icons;
 
 export const createSlug = (string) => {
     if (string) {
-        return string
-            .toLowerCase()
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
-            .split(' ')
-            .join('-');
+        return slugify(string, { lower: true });
     }
+
+    // if (string) {
+    //     return string
+    //         .toLowerCase()
+    //         .normalize('NFD')
+    //         .replace(/[\u0300-\u036f]/g, '')
+    //         .split(' ')
+    //         .join('-');
+    // }
 };
 
 export const formatPrice = (number) => Number(number?.toFixed(3)).toLocaleString();

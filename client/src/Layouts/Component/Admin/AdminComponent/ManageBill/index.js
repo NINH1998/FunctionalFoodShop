@@ -126,7 +126,7 @@ const ManageBill = ({ navigate, location }) => {
                 ) : (
                     <Space direction="vertical" className="w-full">
                         {counts === 0 ? (
-                            <p className="italic">Không tìm thấy sản phẩm nào</p>
+                            <p className="italic text-center text-sm font-semibold">Không tìm thấy sản phẩm nào</p>
                         ) : (
                             <div className="desktop:w-main m-auto overflow-x-auto">
                                 <ManageBillTable bills={bills} handleCompletedBill={handleCompletedBill} />

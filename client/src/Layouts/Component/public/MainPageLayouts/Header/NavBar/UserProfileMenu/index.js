@@ -24,7 +24,7 @@ const UserProfileMenu = ({ current, dispatch, useSelector }) => {
                         <img
                             src={current?.avatar}
                             alt="Avatar"
-                            className="border-2 border-primary object-cover w-[40px] h-[40px] rounded-full"
+                            className="object-cover w-[40px] h-[40px] rounded-full"
                         />
                     </div>
                 </DropdownCustom>

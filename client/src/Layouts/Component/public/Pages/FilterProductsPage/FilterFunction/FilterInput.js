@@ -30,7 +30,9 @@ const FilterInput = ({
     const { pathname } = location;
     const isProductPath = pathname.replace('/', '');
     const [bestPrice, setBestPrice] = useState(null);
+    const [bestPriceDiscount, setBestPriceDiscount] = useState(null);
     const [lowestPrice, setLowestPrice] = useState(null);
+    const [lowestPriceDiscount, setLowestPriceDiscount] = useState(null);
     const filterRef = useRef();
 
     const hanldeChekbox = (e) => {
@@ -50,6 +52,7 @@ const FilterInput = ({
         const response = await apiGetProducts({ sort: '-price', limit: 1 });
         if (response.success) {
             setBestPrice(response.products[0]?.price);
+            setBestPriceDiscount(response.products[0]?.discount.percentage);
             setPrice((prev) => {
                 const newBestPrice = response.products[0]?.price;
                 return newBestPrice > prev.To ? { ...prev, To: queries.To ? queries.To : newBestPrice } : prev;
@@ -58,9 +61,11 @@ const FilterInput = ({
     };
 
     const lowestPriceProduct = async () => {
+        const queries = Object.fromEntries([...params]);
         const response = await apiGetProducts({ sort: 'price', limit: 1 });
         if (response.success) {
             setLowestPrice(response.products[0]?.price);
+            setLowestPriceDiscount(response.products[0]?.discount.percentage);
             setPrice((prev) => {
                 const newLowestPrice = response.products[0]?.price;
                 return newLowestPrice > prev.From ? { ...prev, From: newLowestPrice } : prev;
@@ -71,8 +76,9 @@ const FilterInput = ({
     useEffect(() => {
         sortBestPriceProduct();
         lowestPriceProduct();
+
         // eslint-disable-next-line
-    }, []);
+    }, [params]);
 
     const handleResetAllFilter = () => {
         setSeclected([]);
@@ -111,11 +117,11 @@ const FilterInput = ({
                                                 <div className="flex items-center gap-2">
                                                     <InputCheckBox
                                                         id={category.title}
-                                                        value={category.title}
+                                                        value={category._id}
                                                         label={category.title}
-                                                        onChange={hanldeMainFieldChekbox}
+                                                        handleOnChange={hanldeMainFieldChekbox}
                                                         checked={selectedMainField?.some(
-                                                            (check) => check === category.title,
+                                                            (check) => check === category._id,
                                                         )}
                                                     />
                                                 </div>
@@ -149,6 +155,7 @@ const FilterInput = ({
                                     min={lowestPrice}
                                     max={bestPrice}
                                     value={[price?.From, price?.To]}
+                                    defaultValue={[lowestPrice, bestPrice]}
                                     onChange={handleSliderChange}
                                     tooltip={{ open: false }}
                                 />
@@ -157,11 +164,15 @@ const FilterInput = ({
                                 <p className="mt-4 text-sm text-center">
                                     Tìm kiếm giá từ{' '}
                                     <span className="font-semibold text-red-500">
-                                        {formatPrice(Math.round(price?.From / 1000) * 1000)}
+                                        {formatPrice(
+                                            Math.round((price?.From / 1000) * (1 - lowestPriceDiscount / 100)) * 1000,
+                                        )}
                                     </span>{' '}
                                     đến{' '}
                                     <span className="font-semibold  text-red-500">
-                                        {formatPrice(Math.round(price?.To / 1000) * 1000)}
+                                        {formatPrice(
+                                            Math.round((price?.To / 1000) * (1 - bestPriceDiscount / 100)) * 1000,
+                                        )}
                                     </span>{' '}
                                     VNĐ
                                 </p>

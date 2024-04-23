@@ -9,6 +9,7 @@ import { Icons } from 'Layouts/Assets/icons';
 import { toast } from 'react-toastify';
 import QuickViewModal from './QuickViewModal';
 import withComponent from 'Hocs/withComponent';
+import { PuffLoader } from 'react-spinners';
 
 const { FaEye, FaHeart, TiShoppingCart, FaRegHeart } = Icons;
 
@@ -88,7 +89,7 @@ const ActionBtn = ({ isOpen, product, setIsOpen, current, dispatch }) => {
                                     className="flex justify-center items-center bg-gray-50 hover:bg-gray-200
                                     animation w-[40px] h-[40px] rounded-[50%] shadow-default cursor-pointer"
                                 >
-                                    <FaEye color="#6b7280" size="16px" />
+                                    <FaEye color="#6b7280" size={18} />
                                 </div>
                             </TippyWrap>
                             <TippyWrap content="Thêm vào giỏ" fontSize="text-[12px]">
@@ -98,9 +99,9 @@ const ActionBtn = ({ isOpen, product, setIsOpen, current, dispatch }) => {
                                     animation w-[40px] h-[40px] rounded-[50%] shadow-default cursor-pointer"
                                 >
                                     {isLoading ? (
-                                        <Loading color="#4d7c0f" size={16} border="!border-[3px]" />
+                                        <Loading shape={<PuffLoader color="#6b7280" size={20} />} />
                                     ) : (
-                                        <TiShoppingCart color="#6b7280" size="16px" />
+                                        <TiShoppingCart color="#6b7280" size={18} />
                                     )}
                                 </div>
                             </TippyWrap>
@@ -118,9 +119,9 @@ const ActionBtn = ({ isOpen, product, setIsOpen, current, dispatch }) => {
                                     animation w-[40px] h-[40px] rounded-[50%] shadow-default cursor-pointer"
                                 >
                                     {current?.wishlist?.some((el) => el.product?._id === product?._id) ? (
-                                        <FaHeart color="#f43f5e" size="16px" />
+                                        <FaHeart color="#f43f5e" size={18} />
                                     ) : (
-                                        <FaRegHeart color="#6b7280" size="16px" />
+                                        <FaRegHeart color="#6b7280" size={18} />
                                     )}
                                 </div>
                             </TippyWrap>

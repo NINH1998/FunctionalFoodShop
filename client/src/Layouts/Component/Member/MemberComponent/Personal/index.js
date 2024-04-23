@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
 import { Button, InputForm, Loading } from 'Layouts/Component/public/Common';
+import { useEffect, useState } from 'react';
 import { apiUpdateCurrent } from 'Context/StoreApi';
 import { getCurrentUser } from 'Context/Reducer/User/UserApi';
 import { Icons, Images } from 'Layouts/Assets/icons';
@@ -10,19 +10,20 @@ import { useForm } from 'react-hook-form';
 import withComponent from 'Hocs/withComponent';
 import moment from 'moment';
 import Swal from 'sweetalert2';
+
 const { FaCamera } = Icons;
 
-const Personal = ({ dispatch }) => {
+const Personal = ({ dispatch, current }) => {
     const {
-        formState: { errors },
+        formState: { errors, isDirty },
         handleSubmit,
         register,
         reset,
         watch,
     } = useForm({});
-    const { current, isLoading } = useSelector((state) => state.userReducer);
+    const { isLoading } = useSelector((state) => state.userReducer);
     const [avatar, setAvatar] = useState(null);
-    const [isInfoLoading, setIsInfoLoading] = useState(false);
+    const [isEditLoading, setIsEditLoading] = useState(false);
 
     useEffect(() => {
         reset({
@@ -48,12 +49,14 @@ const Personal = ({ dispatch }) => {
 
     const handleChangeInfo = async (data) => {
         const formData = new FormData();
-        if (data.avatar.length > 0) formData.append('avatar', data.avatar[0]);
-        delete data.avatar;
+        if (watch('avatar') instanceof FileList && data.avatar.length > 0) {
+            formData.append('avatar', data.avatar[0]);
+            delete data.avatar;
+        }
         for (let i of Object.entries(data)) formData.append(i[0], i[1]);
-        setIsInfoLoading(true);
+        setIsEditLoading(true);
         const response = await apiUpdateCurrent(formData);
-        setIsInfoLoading(false);
+        setIsEditLoading(false);
         if (response.success) {
             dispatch(getCurrentUser());
             Swal.fire('', response.message, 'success');
@@ -62,7 +65,7 @@ const Personal = ({ dispatch }) => {
 
     return (
         <div className="p-6 w-full">
-            {isInfoLoading && (
+            {isEditLoading && (
                 <div className="fixed inset-0 h-full w-full bg-overlay z-[999] flex items-center justify-center">
                     <Loading color={'white'} />
                 </div>
@@ -155,9 +158,11 @@ const Personal = ({ dispatch }) => {
                                 Role: {current?.role === 'enikk ' ? 'Admin' : 'User'}
                             </div>
                         </div>
-                        <div className="text-end">
-                            <Button>Thay đổi</Button>
-                        </div>
+                        {isDirty && (
+                            <div className="text-end">
+                                <Button>Thay đổi</Button>
+                            </div>
+                        )}
                     </div>
                 </div>
             </form>

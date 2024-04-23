@@ -59,7 +59,7 @@ export const Images = {
     NewProductIcon: require('./NewProduct.png'),
     CategoryProductIcon: require('./CategoryIcon.png'),
     NewItemIcon: require('./newItem.png'),
-    DiscountLabel: require('./discount-label.png'),
+    DiscountLabel: require('./DiscountLabel.png'),
     BestSeller: require('./best-seller.png'),
     DiscountProductIcon: require('./discount.png'),
     Facebook: require('./facebook.png'),

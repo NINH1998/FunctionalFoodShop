@@ -84,29 +84,30 @@ const updateUser = async (req, res) => {
     const { _id } = req.user;
     const { firstname, lastname, emailAddress, avatar, phone, address } = req.body;
     if (req?.file) req.body.avatar = req?.file?.path;
-    if (!_id || Object.keys(req.body).length === 0)
+    if (!(_id || Object.keys(req.body).length === 0))
         return res.status(400).json({ success: false, message: 'Missing inputs' });
     try {
-        const updatedUser = { firstname, lastname, emailAddress, avatar, phone, address };
-        const response = await User.findByIdAndUpdate(_id, req.body, { new: true }).select(
+        const dataUpdateUser = { firstname, lastname, emailAddress, avatar: req.body.avatar, phone, address };
+        const response = await User.findByIdAndUpdate(_id, dataUpdateUser, { new: true }).select(
             '-password -role -refreshToken',
         );
         return res.status(200).json({ success: true, message: 'Cập nhật thông tin thành công', updateUser: response });
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ success: false, message: 'Lỗi, Không cập nhập được thông tin' });
     }
 };
 
 const updateUserByAdmin = async (req, res) => {
     const { uid } = req.params;
-    const { firstname, lastname, emailAddress, avatar, phone, address } = req.body;
+    const { firstname, lastname, emailAddress, avatar, phone, address, role, isBlocked } = req.body;
     if (Object.keys(req.body).length === 0) return res.status(400).json({ success: false, message: 'Missing inputs' });
     try {
-        const updateContent = { firstname, lastname, emailAddress, avatar, phone, address };
-        const response = await User.findByIdAndUpdate(uid, updateContent, { new: true }).select(
+        const updateData = { firstname, lastname, emailAddress, avatar, phone, address, role, isBlocked };
+        const updateUser = await User.findByIdAndUpdate(uid, updateData, { new: true }).select(
             '-password -role -refreshToken',
         );
-        return res.status(200).json({ success: true, message: 'Cập nhật thông tin thành công', updateUser: response });
+        return res.status(200).json({ success: true, message: 'Cập nhật thông tin thành công', updateUser });
     } catch (error) {
         return res.status(500).json({ success: false, message: 'Lỗi, Không cập nhập được thông tin' });
     }
@@ -178,14 +179,10 @@ const login = async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) return res.status(400).json({ success: false, message: 'Missing email or password' });
     try {
-        const user = await User.findOne({ email }).populate({
-            path: 'cart',
-            populate: {
-                path: 'product',
-                select: 'title thumb price uses',
-            },
-        });
-
+        const user = await User.findOne({ email });
+        if (user.isBlocked) {
+            return res.status(500).json({ success: false, message: 'Tài khoản đã bị khóa do vi phạm điều khoản' });
+        }
         if (user && (await user.isCorrectPassword(password))) {
             const { password, role, refreshToken, ...userdata } = user.toObject();
             const accessToken = Accesstoken(user._id, role);
@@ -363,7 +360,6 @@ const wishlistUser = async (req, res) => {
             return res.status(200).json({ success: true, message: 'Đã thêm vào yêu thích' });
         }
     } catch (error) {
-        // console.log(error);
         return res.status(500).json({ success: false, message: 'Lỗi không xác định' });
     }
 };

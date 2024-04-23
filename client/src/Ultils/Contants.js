@@ -112,7 +112,7 @@ export const memberSidebar = [
     },
 ];
 
-export const role = [
+export const roles = [
     { value: 'enikk', label: 'Admin' },
     { value: 'pilgrims', label: 'User' },
 ];
@@ -193,30 +193,6 @@ export const ratingStar = [
     {
         id: 5,
         content: 'Rất tốt',
-    },
-];
-
-export const productSwipersCategory = [
-    {
-        id: 0,
-        title: 'Sản phẩm bán chạy',
-        apiData: { sort: '-sold', limit: 10 },
-        redirectData: { sort: '-sold' },
-        imagesTitle: Images.BestSeller,
-    },
-    {
-        id: 1,
-        title: 'Sản phẩm mới',
-        apiData: { sort: '-createdAt', limit: 10 },
-        redirectData: { sort: '-createdAt' },
-        imagesTitle: Images.NewProductIcon,
-    },
-    {
-        id: 2,
-        title: 'Sản phẩm giảm giá',
-        apiData: { select: 'discount', limit: 10 },
-        redirectData: { select: 'discount' },
-        imagesTitle: Images.DiscountProductIcon,
     },
 ];
 

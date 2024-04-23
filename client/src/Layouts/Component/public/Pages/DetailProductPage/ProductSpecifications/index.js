@@ -1,18 +1,21 @@
 import { apiUpdateCart, apiUpdateWishlist } from 'Context/StoreApi';
-import withComponent from 'Hocs/withComponent';
-import { Icons } from 'Layouts/Assets/icons';
-import React, { memo, useState } from 'react';
-import { detailProductInfo } from 'Ultils/Contants';
 import { formatPrice, starNumber } from 'Ultils/helper';
-import { useParams } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import { Button, IconsButton } from 'Layouts/Component/public/Common';
-import { getCurrentUser } from 'Context/Reducer/User/UserApi';
+import { detailProductInfo } from 'Ultils/Contants';
 import { addToCartSession } from 'Context/Reducer/AppState/CommonAction';
+import { Link, useParams } from 'react-router-dom';
+import { directCategory } from 'Context/Reducer/Products/ProductsAction';
+import { memo, useState } from 'react';
+import { getCurrentUser } from 'Context/Reducer/User/UserApi';
+import { Icons } from 'Layouts/Assets/icons';
+import { toast } from 'react-toastify';
+import withComponent from 'Hocs/withComponent';
+import moment from 'moment';
+import path from 'Router/path';
 
 const { FaHeart, FaRegHeart, FaPlus, FaMinus, TiShoppingCart } = Icons;
 
-const ProductSpecifications = ({ product, current, dispatch, currentCart }) => {
+const ProductSpecifications = ({ product, current, dispatch, currentCart, tagProduct }) => {
     const { pid } = useParams();
     const detailProductInfoList = detailProductInfo(product);
     const [quantity, setQuantity] = useState(1);
@@ -62,16 +65,29 @@ const ProductSpecifications = ({ product, current, dispatch, currentCart }) => {
         }
     };
 
+    const handleFilterByTag = (tagId) => {
+        dispatch(directCategory({ tagId }));
+    };
+
     return (
         <div className="tablet:w-[55%] phone:w-full relative">
             <div className="border-b-[1px] leading-10 mb-4">
                 <h2 className="uppercase font-semibold text-primary">{product?.title}</h2>
                 <div className="text-xl">
-                    Giá bán: <strong className="text-primary">{formatPrice(product?.price)} Đ</strong>
+                    <span className="text-base font-bold">Giá bán: </span>
+                    <span className="font-semibold text-red-500 mr-2">{`${formatPrice(
+                        product?.price * (1 - product?.discount?.percentage / 100),
+                    )} VNĐ`}</span>
+                    <span className="line-through text-sm text-gray-500 ">{`${formatPrice(product?.price)} VNĐ`}</span>
+                    {moment(product?.discount?.expiryDiscount).diff(moment(), 'days') > 0 && (
+                        <span className="text-gray-500 text-sm">
+                            {`(Còn ${moment(product?.discount?.expiryDiscount).diff(moment(), 'days')} ngày)`}
+                        </span>
+                    )}
                 </div>
                 <span className="flex">{starNumber(product?.totalRatings)}</span>
             </div>
-            <ul className="leading-10 text-base">
+            <ul className="flex flex-col gap-3 text-base">
                 {detailProductInfoList.map((el, index) => (
                     <li key={index}>
                         <strong>{el.title}</strong>
@@ -79,7 +95,9 @@ const ProductSpecifications = ({ product, current, dispatch, currentCart }) => {
                     </li>
                 ))}
             </ul>
-            <strong>Mô tả:</strong>
+            <div className="mt-4">
+                <strong>Mô tả:</strong>
+            </div>
             <p className="my-2 text-base max-h-[300px] overflow-auto">{product?.uses}</p>
             <div className="mt-6 flex flex-col gap-2">
                 <label htmlFor="quantity" className="font-bold">
@@ -127,6 +145,21 @@ const ProductSpecifications = ({ product, current, dispatch, currentCart }) => {
                         />
                     </div>
                 </div>
+            </div>
+            <div className="flex flex-wrap flex-row gap-2 mt-4">
+                {tagProduct?.map((el) => (
+                    <Link
+                        to={`/${path.TOTAL_PRODUCTS}`}
+                        onClick={() => handleFilterByTag(el._id)}
+                        style={{ backgroundColor: el.colorTag }}
+                        className="flex gap-2 items-center relative rounded-full px-2 py-1 text-white
+                         text-sm font-semibold hover:opacity-80 animation-200 cursor-pointer"
+                        key={el._id}
+                    >
+                        {<img alt="" src={el.iconTag} className="w-5 h-5" />}
+                        {el.title}
+                    </Link>
+                ))}
             </div>
         </div>
     );

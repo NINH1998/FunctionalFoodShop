@@ -1,28 +1,30 @@
+import { memo, useEffect, useLayoutEffect, useState } from 'react';
 import { useSearchParams, createSearchParams } from 'react-router-dom';
-import { memo, useEffect, useState } from 'react';
 import { getProducts } from 'Context/Reducer/Products/ProductsApi';
 import { useSelector } from 'react-redux';
-import { Loading } from '../../Common';
 import { Icons } from 'Layouts/Assets/icons';
 import { t } from 'i18next';
-import ReactPaginate from 'react-paginate';
-import withComponent from 'Hocs/withComponent';
 import FilterFunction from './FilterFunction';
+import ReactPaginate from 'react-paginate';
+import SliderLoading from '../../MainPageLayouts/Body/Content/SliderLoading';
+import withComponent from 'Hocs/withComponent';
 import IconsButton from '../../Common/IconsButton';
 import Product from '../../MainPageLayouts/Body/Content/Product/ProductContainer';
 
 const { FaChevronLeft, FaChevronRight } = Icons;
 
 const FilteredProducts = ({ dispatch, navigate, location }) => {
-    const { searchValue, products, isLoading, valueCategory, filterProductValue } = useSelector(
+    const { searchValue, products, isLoading, valueCategory, valueMainCategory, tagId, clearParams } = useSelector(
         (state) => state.productsReducer,
     );
     const [params] = useSearchParams();
     const { pathname } = location;
     const isProductPath = pathname.replace('/', '');
-    const [currentPage, setCurrentPage] = useState(0);
-    const [selected, setSeclected] = useState([]);
-    const [selectedMainField, setSelectedMainField] = useState([]);
+    const [currentPage, setCurrentPage] = useState(parseInt(Object.fromEntries([...params]).page) || 1);
+    const [selected, setSeclected] = useState(Object.fromEntries([...params]).category?.split(',') || []);
+    const [selectedMainField, setSelectedMainField] = useState(
+        Object.fromEntries([...params]).mainCategory?.split(',') || [],
+    );
     const [updated, setUpdated] = useState(false);
     const [sort, setSort] = useState('');
     const [discount, setDiscount] = useState('');
@@ -32,78 +34,94 @@ const FilteredProducts = ({ dispatch, navigate, location }) => {
         To: '',
     });
 
-    useEffect(() => {
-        const queries = Object.fromEntries([...params]);
-
-        if (queries.category) {
-            setSeclected([queries.category]);
-        }
-        if (queries.mainCategory) {
-            setSelectedMainField([queries.mainCategory]);
-        }
-        if (queries.From && queries.To)
-            setPrice({
-                From: queries.From,
-                To: queries.To,
-            });
-    }, [location.search]);
-
     const fetchProducts = async (queries) => {
         dispatch(getProducts(queries));
     };
 
     const pageCount = Math.ceil((products?.counts || 1) / +process.env.REACT_APP_PRODUCT_PER_PAGE);
     const changePage = ({ selected }) => {
-        setCurrentPage(selected);
+        setCurrentPage(selected + 1);
     };
 
     useEffect(() => {
         const queries = Object.fromEntries([...params]);
-
-        if (sort) queries.sort = sort;
-
-        if (currentPage) {
-            queries.page = currentPage + 1;
+        if (currentPage > 1) {
+            queries.page = currentPage;
         } else delete queries.page;
 
-        if (selectedMainField.join(',')) {
-            queries.mainCategory = selectedMainField.join(',');
+        if (tagId) {
+            queries.tagId = tagId;
         }
 
-        if (selected.join(',')) {
-            queries.category = selected.join(',');
-        }
-
-        if (price.From) queries.From = +price.From;
-        if (price.To) queries.To = +price.To;
-
+        if (valueMainCategory?.join(',')) {
+            queries.mainCategory = valueMainCategory.join(',');
+        } else delete queries.mainCategory;
+        console.log(searchValue);
         navigate(
             {
                 pathname: location.pathname,
                 search: createSearchParams({
                     ...queries,
                     ...searchValue,
-                    ...filterProductValue,
+                }).toString(),
+            },
+            { replace: true },
+        );
+        fetchProducts({
+            ...queries,
+            ...searchValue,
+            category: queries.category || (t(isProductPath) !== 'Sản phẩm' ? t(isProductPath) : null),
+        });
+        // eslint-disable-next-line
+    }, [clearParams, isProductPath, currentPage, searchValue, valueMainCategory]);
+
+    const handleFilter = () => {
+        const queries = Object.fromEntries([...params]);
+
+        if (sort) {
+            queries.sort = sort;
+        }
+
+        if (selectedMainField.join(',')) {
+            queries.mainCategory = selectedMainField.join(',');
+        } else delete queries.mainCategory;
+
+        if (selected.join(',')) {
+            queries.category = selected.join(',');
+        } else delete queries.category;
+
+        if (price.From) {
+            queries.From = +price.From;
+        } else delete queries.From;
+
+        if (price.To) {
+            queries.To = +price.To;
+        } else delete queries.To;
+
+        navigate(
+            {
+                pathname: location.pathname,
+                search: createSearchParams({
+                    ...queries,
                 }).toString(),
             },
             { replace: true },
         );
 
+        delete queries.page;
+        setCurrentPage(1);
+        setOpenFilter(false);
+        setUpdated(!updated);
+
         fetchProducts({
             ...queries,
-            ...searchValue,
-            ...filterProductValue,
-            category: queries.category || (t(isProductPath) !== 'Sản phẩm' ? t(isProductPath) : null),
             ...discount,
         });
-        // eslint-disable-next-line
-    }, [params, sort, currentPage, updated, valueCategory, discount, isProductPath]);
-
-    const handleFilter = () => {
-        setUpdated(!updated);
-        setCurrentPage(0);
-        setOpenFilter(false);
     };
+
+    useLayoutEffect(() => {
+        if (t(isProductPath) !== 'Sản phẩm') setCurrentPage(1);
+    }, [isProductPath]);
 
     return (
         <>
@@ -124,27 +142,23 @@ const FilteredProducts = ({ dispatch, navigate, location }) => {
                 setSort={setSort}
                 sort={sort}
             />
-
             <div className="relative desktop:w-main phone:w-full">
-                {isLoading ? (
-                    <div className="grid desktop:grid-cols-4 tablet:grid-cols-3 iPadmini:grid-cols-2 phone:grid-cols-1 auto-rows-auto gap-10 px-4">
-                        {products?.products?.map((product) => (
-                            <div
-                                key={product._id}
-                                className="flex w-[226px] h-[316px] bg-gray-200 rounded-lg animate-pulse"
-                            ></div>
-                        ))}
-                    </div>
-                ) : (
-                    <div className="grid desktop:grid-cols-4 tablet:grid-cols-3 iPadmini:grid-cols-2 phone:grid-cols-1 auto-rows-auto gap-10 px-4">
-                        {products?.products?.map((product) => (
-                            <Product product={product} key={product._id} />
-                        ))}
-                    </div>
-                )}
-
+                <div className="relative desktop:w-main phone:w-full">
+                    {isLoading ? (
+                        <SliderLoading
+                            numberItem={12}
+                            styles="grid desktop:grid-cols-4 phone:grid-cols-1 iPadmini:grid-cols-2 tablet:grid-cols-3 gap-10"
+                        />
+                    ) : (
+                        <div className="grid desktop:grid-cols-4 tablet:grid-cols-3 iPadmini:grid-cols-2 phone:grid-cols-1 auto-rows-auto gap-10 px-4">
+                            {products?.products?.map((product) => (
+                                <Product product={product} key={product._id} />
+                            ))}
+                        </div>
+                    )}
+                </div>
                 <ReactPaginate
-                    forcePage={currentPage}
+                    forcePage={(currentPage && currentPage - 1) || 0}
                     nextLabel={<IconsButton styles="paginate-btn" icon={<FaChevronRight color="white" size={18} />} />}
                     previousLabel={
                         <IconsButton styles="paginate-btn" icon={<FaChevronLeft color="white" size={18} />} />

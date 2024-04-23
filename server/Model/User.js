@@ -16,9 +16,6 @@ var userSchema = new mongoose.Schema(
         },
         googleFullName: String,
         googleId: String,
-        avatar: {
-            type: String,
-        },
         email: {
             type: String,
             required: true,

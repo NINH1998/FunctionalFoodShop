@@ -8,21 +8,22 @@ export const productState = createSlice({
         product: null,
         searchValue: null,
         valueCategory: null,
-        filterProductValue: null,
+        valueMainCategory: [],
+        tagId: null,
+        clearParams: false,
         isLoading: true,
     },
     reducers: {
         getProduct: (state, action) => {
             state.product = action.payload.product;
         },
-        filterProducts: (state, action) => {
-            state.filterProductValue = action.payload.filterProductValue;
-        },
-        searchProducts: (state, action) => {
-            state.searchValue = action.payload.searchValue;
-        },
+
         directCategory: (state, action) => {
             state.valueCategory = action.payload.valueCategory;
+            state.valueMainCategory = action.payload.valueMainCategory;
+            state.tagId = action.payload.tagId;
+            state.clearParams = action.payload.clearParams;
+            state.searchValue = action.payload.searchValue;
         },
     },
 
@@ -42,5 +43,5 @@ export const productState = createSlice({
     },
 });
 
-export const { getProduct, searchProducts, directCategory, filterProducts } = productState.actions;
+export const { getProduct, directCategory } = productState.actions;
 export default productState.reducer;

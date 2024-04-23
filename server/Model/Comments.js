@@ -1,7 +1,7 @@
-const mongoose = require('mongoose'); // Erase if already required
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-// Declare the Schema of the Mongo model
-const commentSchema = new mongoose.Schema(
+const commentSchema = new Schema(
     {
         text: String,
         postedBy: { type: mongoose.Types.ObjectId, ref: 'User' },

@@ -1,14 +1,17 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { filterProducts } from 'Context/Reducer/Products/ProductsAction';
+import { directCategory } from 'Context/Reducer/Products/ProductsAction';
+import { useSelector } from 'react-redux';
 import { Navigation } from 'Ultils/Contants';
 import { memo } from 'react';
 import { Link } from 'react-router-dom';
+import DropdownCategory from './DropdownCategory';
 import withComponent from 'Hocs/withComponent';
-import DropdownMenu from './DropdownMenu';
 
 const NavigationMenu = ({ dispatch, setIsDropdownMenu, isDropdownMenu, setIsCancelMouseLeave, isCancelMouseLeave }) => {
-    const handlResetFilterProducts = () => {
-        dispatch(filterProducts({ filterProductValue: null }));
+    const { clearParams } = useSelector((state) => state.productsReducer);
+    const handleClickToNavProduct = () => {
+        dispatch(directCategory({ clearParams: !clearParams }));
+        setIsDropdownMenu(false);
     };
 
     return (
@@ -17,14 +20,14 @@ const NavigationMenu = ({ dispatch, setIsDropdownMenu, isDropdownMenu, setIsCanc
                 <div key={el.id} className="flex justify-center font-bold items-center hover:bg-gray-200 animation-200">
                     {el.icon ? (
                         <div
-                            className="relative w-full h-full cursor-pointer"
+                            className="relative w-full h-full"
                             onMouseEnter={() => setIsDropdownMenu(true)}
                             onMouseLeave={() => (isCancelMouseLeave ? false : setIsDropdownMenu(false))}
                         >
                             <Link
                                 to={el.path}
-                                className="h-full w-full flex items-center"
-                                onClick={handlResetFilterProducts}
+                                className="h-full w-full flex items-center cursor-pointer"
+                                onClick={handleClickToNavProduct}
                             >
                                 <div className="text-base flex items-center px-6">
                                     <span className="whitespace-nowrap mr-2">{el.value}</span>
@@ -34,13 +37,13 @@ const NavigationMenu = ({ dispatch, setIsDropdownMenu, isDropdownMenu, setIsCanc
                             <AnimatePresence>
                                 {isDropdownMenu && (
                                     <motion.div
-                                        initial={{ y: 10, opacity: 0 }}
+                                        initial={{ y: 10, x: '-40%', opacity: 0 }}
                                         animate={{ y: 0, opacity: 1 }}
-                                        exit={{ y: 10, opacity: 0 }}
-                                        transition={{ duration: 0.2, ease: 'easeOut' }}
-                                        className="absolute left-[-100%] top-[55px] z-[999] bg-white p-2 shadow-large rounded-md text-base"
+                                        exit={{ y: 10, x: '-40%', opacity: 0 }}
+                                        transition={{ duration: 0.1, ease: 'easeOut' }}
+                                        className="absolute top-[55px] z-[999] bg-white p-2 shadow-large rounded-sm text-base"
                                     >
-                                        <DropdownMenu
+                                        <DropdownCategory
                                             setIsDropdownMenu={setIsDropdownMenu}
                                             setIsCancelMouseLeave={setIsCancelMouseLeave}
                                         />

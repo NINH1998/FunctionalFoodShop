@@ -1,15 +1,15 @@
 import { useEffect, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { BreadCrumb } from '../index';
-import { Images } from 'Layouts/Assets/icons';
 import FilteredProducts from './FilteredProducts';
 import withComponent from 'Hocs/withComponent';
 
 const ProductsPage = ({ location }) => {
     const breadcrumbRef = useRef();
-
+    const [params] = useSearchParams();
     useEffect(() => {
-        breadcrumbRef.current.scrollIntoView({ behavior: 'smooth' });
-    }, [location.pathname]);
+        breadcrumbRef.current.scrollIntoView({ behavior: 'auto' });
+    }, [params]);
 
     return (
         <div className="relative h-auto">

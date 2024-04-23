@@ -1,5 +1,6 @@
-import { useState, memo, useCallback, useRef } from 'react';
-import { filterProducts } from 'Context/Reducer/Products/ProductsAction';
+import { useState, memo, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { directCategory } from 'Context/Reducer/Products/ProductsAction';
 import { sortsByOrder } from 'Ultils/Contants';
 import { Button } from '../../../Common';
 import { Select } from 'antd';
@@ -22,18 +23,17 @@ const FilterFunction = ({
     openFilter,
     setOpenFilter,
     handleFilter,
-    useSelector,
     dispatch,
 }) => {
-    const { filterProductValue } = useSelector((state) => state.productsReducer);
-    const [seclectValue, setSeclectValue] = useState(filterProductValue?.sort || '-createdAt');
+    const [params] = useSearchParams();
+    const [seclectValue, setSeclectValue] = useState(Object.fromEntries([...params]).sort || '-createdAt');
 
     const handleOpenFilter = () => {
         setOpenFilter(!openFilter);
     };
 
     const handleChangeOptions = useCallback((value) => {
-        if (sort) dispatch(filterProducts({ filterProductValue: null }));
+        if (sort) dispatch(directCategory({ directMainCategory: null }));
         setSeclectValue(value);
         if (value === 'discount') {
             const filterDiscount = { 'discount.percentage': { gt: 0 } };

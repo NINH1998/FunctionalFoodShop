@@ -1,73 +1,127 @@
 import { Button, InputForm, Loading, ModalUI } from 'Layouts/Component/public/Common';
+import { useCallback, useEffect, useState } from 'react';
 import { setSelectedListCategory } from 'Context/Reducer/Category/CategoryAction';
-import { useCallback, useState } from 'react';
-import { apiCreateProduct } from 'Context/StoreApi';
-import { useSelector } from 'react-redux';
-import { MarkDown } from 'Layouts/Component/Admin/AdminComponent';
+import { apiCreateProductTag } from 'Context/StoreApi/Tag';
+import { apiUpdateProduct } from 'Context/StoreApi';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
+import { Icons } from 'Layouts/Assets/icons';
+import { memo } from 'react';
 import withComponent from 'Hocs/withComponent';
-import UploadImages from '../ManageProducts/UploadImages';
+import UploadImages from './UploadImages';
 import CustomSelect from 'Layouts/Component/public/Common/CustomSelect';
+import TagPreview from './TagPreview';
+import MarkDown from './MarkDown';
 
-const CreateProduct = ({ dispatch }) => {
-    const { categories, categoryItem } = useSelector((state) => state.categoriesReducer);
+const { IoChevronBackOutline } = Icons;
+
+const UpdateProduct = ({ editProduct, render, setEditProduct, dispatch, useSelector }) => {
     const {
         formState: { errors },
         handleSubmit,
         register,
-        setValue,
         reset,
+        setValue,
     } = useForm({});
-
+    const { categories, categoryItem } = useSelector((state) => state.categoriesReducer);
     const [payload, setPayload] = useState({ description: '' });
-    const [subCategory, setSubCategory] = useState(null);
+    const [preview, setPreview] = useState({ thumb: null, images: [] });
+    const [subCategory, setSubCategory] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [preview, setPreview] = useState({
-        thumb: null,
-        images: [],
-    });
+    const [tagsCreated, setTagsCreated] = useState([]);
 
     const changeValue = useCallback((e) => setPayload(e), []);
 
-    const handleCreateProduct = async (data) => {
+    useEffect(() => {
+        reset({
+            title: editProduct?.title || '',
+            price: Math.round(editProduct?.price) || '',
+            quantity: editProduct?.quantity || '',
+            sold: editProduct?.sold || '',
+            brand: editProduct?.brand || '',
+            origin: editProduct?.origin || '',
+            unitCalculation: editProduct?.unitCalculation || '',
+            mainCategory: editProduct?.mainCategory[0]._id || '',
+            category: editProduct?.category || '',
+            uses: editProduct?.uses || '',
+            percentage: editProduct?.discount?.percentage || '',
+            expiry:
+                (Math.ceil((new Date(editProduct?.discount?.expiryDiscount) - new Date()) / (1000 * 60 * 60 * 24)) <
+                    0 &&
+                    0) ||
+                '',
+        });
+        setPayload({ description: editProduct?.description });
+        setPreview({ thumb: editProduct?.thumb, images: editProduct?.images });
+        window.scrollTo(0, 0);
+        // eslint-disable-next-line
+    }, [editProduct]);
+
+    const handleUpdateProduct = async (data) => {
+        const tagIdArray = tagsCreated.map((tag) => tag._id);
         const totalPayload = { ...data, ...payload };
         const formData = new FormData();
         for (let i of Object.entries(totalPayload)) formData.append(i[0], i[1]);
-        if (preview.thumb) formData.append('thumb', preview.thumb);
+        if (preview.thumb) formData.append('thumb', preview?.thumb);
         if (preview.images) {
-            for (let image of preview.images) formData.append('images', image);
+            for (let image of preview?.images) formData.append('images', image);
         }
-
         setIsLoading(true);
-        const response = await apiCreateProduct(formData);
+        try {
+            const [tagsToProduct, updateProduct] = await Promise.all([
+                apiCreateProductTag(tagIdArray, editProduct._id),
+                apiUpdateProduct(formData, editProduct._id),
+            ]);
+            if (tagsToProduct.success && updateProduct.success) {
+                toast.success(updateProduct.message);
+                render();
+                reset();
+            } else {
+                toast.error(updateProduct.message);
+            }
+        } catch (error) {
+            toast.error('Đã xảy ra lỗi khi tạo sản phẩm.');
+        }
         setIsLoading(false);
-        if (response.success) {
-            toast.success(response.message);
-            reset();
-            setPreview({ thumb: null, images: [] });
-            setPayload({ description: '' });
-        } else toast.error(response.message);
     };
 
     const handleSelectChange = (selectedOption, id) => {
         setValue(id, selectedOption.value);
         if (id === 'mainCategory') {
-            setSubCategory(null);
             const valueSelect = selectedOption.value;
             const mainCategorySelected = categories.find((el) => el.title === valueSelect);
             dispatch(setSelectedListCategory(mainCategorySelected ? mainCategorySelected.listCategory : []));
         } else setSubCategory(selectedOption.value);
     };
 
+    const handleCloseUpdateProduct = () => {
+        dispatch(setSelectedListCategory([]));
+        setEditProduct(null);
+    };
+
+    useEffect(() => {
+        if (categoryItem.length > 0) {
+            setSubCategory(categoryItem[0]?.itemTitle);
+        } else {
+            setSubCategory(editProduct?.category);
+        }
+    }, [categoryItem]);
+
     return (
-        <div className="w-full">
+        <div className="w-full min-h-screen">
             <div className="h-[65.6px] w-full"></div>
-            <div className="fixed max-tablet:top-[35px] top-0 flex gap-2 items-center px-4 py-2 uppercase text-primary z-[998] shadow-md bg-gray-100 w-full">
-                <h3>Tạo sản phẩm</h3>
+            <div className="flex gap-2 items-center px-4 py-2 uppercase text-primary z-10 shadow-md bg-gray-100 fixed w-full top-0">
+                <h3>Chỉnh sửa sản phẩm</h3>
+                <Button
+                    styles="bg-primary hover:bg-secondary text-white font-semibold py-1 px-2 rounded-md"
+                    handleOnclick={handleCloseUpdateProduct}
+                    iconBefore={<IoChevronBackOutline size={16} />}
+                >
+                    <span className="text-sm">Back</span>
+                </Button>
             </div>
             <div className="p-4">
-                <form onSubmit={handleSubmit(handleCreateProduct)}>
+                <form onSubmit={handleSubmit(handleUpdateProduct)}>
                     <InputForm
                         label={'Tên sản phẩm:'}
                         register={register}
@@ -77,7 +131,7 @@ const CreateProduct = ({ dispatch }) => {
                         fullwidth
                         placeholder={'Nhập tên sản phẩm cần tạo...'}
                     />
-                    <div className="flex phone:flex-col laptop:flex-row laptop:gap-4 mt-2">
+                    <div className="flex gap-4">
                         <InputForm
                             label={'Giá sản phẩm:'}
                             register={register}
@@ -88,7 +142,6 @@ const CreateProduct = ({ dispatch }) => {
                             fullwidth
                             placeholder={'Nhập giá...'}
                         />
-
                         <InputForm
                             label={'Giảm giá (%) (Nếu có):'}
                             register={register}
@@ -102,7 +155,7 @@ const CreateProduct = ({ dispatch }) => {
                             placeholder={'Nhập %...'}
                         />
                         <InputForm
-                            label={'Thời hạn giảm giá (Ngày) (Nếu có):'}
+                            label={'Thời hạn giảm giá (Ngày) (Còn lại):'}
                             register={register}
                             errors={errors}
                             type="number"
@@ -129,8 +182,17 @@ const CreateProduct = ({ dispatch }) => {
                             fullwidth
                             placeholder={'Nhập số lượng...'}
                         />
+                        <InputForm
+                            label={'Số lượng đã bán:'}
+                            register={register}
+                            errors={errors}
+                            type="number"
+                            id={'sold'}
+                            fullwidth
+                            placeholder={'Nhập số lượng...'}
+                        />
                     </div>
-                    <div className="flex phone:flex-col laptop:flex-row gap-4 mt-2">
+                    <div className="flex gap-4">
                         <InputForm
                             label={'Nhãn hàng:'}
                             register={register}
@@ -152,31 +214,50 @@ const CreateProduct = ({ dispatch }) => {
                         <CustomSelect
                             label={'Nhóm sản phẩm:'}
                             onChange={(selectedOption) => handleSelectChange(selectedOption, 'mainCategory')}
-                            options={categories?.map((el) => ({ value: el.title, label: el.title }))}
-                            defaultValue={categories && { value: categories[0].title, label: categories[0].title }}
+                            options={categories?.map((el) => ({ value: el._id, label: el.title }))}
+                            defaultValue={{
+                                value: editProduct?.mainCategory[0]?._id,
+                                label: editProduct?.mainCategory[0].title,
+                            }}
                         />
                         <CustomSelect
                             label={'Loại:'}
                             onChange={(selectedOption) => handleSelectChange(selectedOption, 'category')}
-                            options={categoryItem?.map((el) => ({ value: el.itemTitle, label: el.itemTitle }))}
-                            value={subCategory ? { value: subCategory, label: subCategory } : null}
+                            options={
+                                categoryItem.length > 0
+                                    ? categoryItem?.map((el) => ({ value: el.itemTitle, label: el.itemTitle }))
+                                    : editProduct?.mainCategory[0]?.listCategory?.map((el) => ({
+                                          value: el.itemTitle,
+                                          label: el.itemTitle,
+                                      }))
+                            }
+                            value={{
+                                value: subCategory,
+                                label: subCategory,
+                            }}
                         />
                     </div>
+                    <TagPreview setTagsCreated={setTagsCreated} tagsCreated={tagsCreated} editProduct={editProduct} />
                     <div className="mt-4">
                         <InputForm
                             label={'Mô tả phụ:'}
                             register={register}
                             errors={errors}
                             id={'uses'}
-                            validate={{ required: 'Không được để trống', validate: (val) => val !== '--Chọn loại--' }}
+                            validate={{ required: 'Không được để trống' }}
                             fullwidth
                             placeholder={'Nhập mô tả phụ...'}
                         />
-                        <MarkDown name="description" changeValue={changeValue} label="Mô tả:" />
+                        <MarkDown
+                            name="description"
+                            changeValue={changeValue}
+                            label="Mô tả:"
+                            value={payload?.description}
+                        />
                     </div>
                     <UploadImages setPreview={setPreview} preview={preview} />
                     <div className="w-full text-end">
-                        <Button type={'submit'}>Tạo sản phẩm</Button>
+                        <Button type={'submit'}>Thay đổi</Button>
                     </div>
                     <ModalUI isOpen={isLoading} onClose={() => setIsLoading(false)}>
                         <Loading />
@@ -187,4 +268,4 @@ const CreateProduct = ({ dispatch }) => {
     );
 };
 
-export default withComponent(CreateProduct);
+export default withComponent(memo(UpdateProduct));

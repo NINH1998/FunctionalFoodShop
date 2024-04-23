@@ -19,15 +19,15 @@ const ProductContainer = ({ product }) => {
             {product?.isNewProduct && (
                 <div
                     style={{ background: `url(${Images.NewItemIcon}) center center / cover no-repeat` }}
-                    className="absolute w-12 h-12 top-0 left-[-20px]"
+                    className="absolute w-12 h-12 top-0 left-[-20px] z-10"
                 ></div>
             )}
             {product?.discount?.percentage > 0 && (
                 <div
                     style={{ background: `url(${Images.DiscountLabel}) center center / cover no-repeat` }}
-                    className="absolute flex justify-center items-center text-white text-sm z-10 w-[50px] h-[50px] top-[50px] left-[-20px]"
+                    className="absolute flex justify-center items-center text-white text-sm w-10 h-10 top-[15%] left-[-18px] z-10 select-none"
                 >
-                    <div className="-rotate-45 font-semibold">{product.discount.percentage}%</div>
+                    <div className="font-bold">{product.discount.percentage}%</div>
                 </div>
             )}
             <div className="flex flex-col gap-2 mt-8">
@@ -37,10 +37,12 @@ const ProductContainer = ({ product }) => {
                 <div className="text-center w-full text-red-500">
                     {product?.discount?.percentage ? (
                         <div className="flex flex-col text-lg">
-                            <span>{`${formatPrice(product?.price)} VNĐ`}</span>
+                            <span>{`${formatPrice(
+                                product?.price * (1 - product?.discount?.percentage / 100),
+                            )} VNĐ`}</span>
                             <div>
                                 <span className="line-through text-sm text-gray-500 ">{`${formatPrice(
-                                    product?.price / (1 - product?.discount?.percentage / 100),
+                                    product?.price,
                                 )} VNĐ`}</span>
                                 {moment(product?.discount?.expiryDiscount).diff(moment(), 'days') > 0 && (
                                     <span className="text-gray-500 text-sm">

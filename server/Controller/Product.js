@@ -1,17 +1,23 @@
 const StoreSchema = require('../Model/Product');
+const ProductTag = require('../Model/ProductTag');
 const slugify = require('slugify');
 
 const getProduct = async (req, res) => {
     const { pid } = req.params;
 
     try {
-        const product = await StoreSchema.findById(pid).populate({
-            path: 'ratings',
-            populate: {
-                path: 'postedBy',
-                select: 'firstname lastname avatar',
-            },
-        });
+        const product = await StoreSchema.findById(pid)
+            .populate({
+                path: 'ratings',
+                populate: {
+                    path: 'postedBy',
+                    select: 'firstname lastname avatar',
+                },
+            })
+            .populate({
+                path: 'mainCategory',
+                select: 'title listCategory',
+            });
         res.status(200).json({ success: true, message: 'Get product success', product: product });
     } catch (error) {
         res.status(500).json({ success: false, message: 'Can not create product' });
@@ -23,42 +29,70 @@ const fetchProducts = async (req, res) => {
     const excludeFiled = ['limit', 'sort', 'page', 'fileds'];
     excludeFiled.forEach((el) => delete queries[el]);
 
-    let queryString = JSON.stringify(queries);
-    queryString = queryString.replace(/\b(gte|gt|lt|lte)\b/g, (matchEl) => `$${matchEl}`);
-    const formatQueries = JSON.parse(queryString);
-
+    let searchResult = {};
     if (req.query.q) {
-        delete formatQueries.q;
-        formatQueries['$or'] = [{ title: { $regex: req.query.q, $options: 'i' } }];
+        searchResult = { title: { $regex: req.query.q, $options: 'i' } };
     }
 
     let discount = {};
     if (req.query.select) {
-        delete formatQueries.select;
         discount = { 'discount.percentage': { $gt: 0 } };
     }
 
     let categories = {};
     if (queries?.category) {
-        // delete formatQueries.category;
-        categories = { $or: queries?.category.split(',').map((el) => ({ category: { $regex: el, $options: 'i' } })) };
+        categories = {
+            $or: queries?.category.split(',').map((el) => ({ category: { $regex: el, $options: 'i' } })),
+        };
     }
 
     let mainCategories = {};
     if (queries?.mainCategory) {
-        delete formatQueries.mainCategory;
-        mainCategories = {
-            $or: queries?.mainCategory.split(',').map((el) => ({ mainCategory: { $regex: el, $options: 'i' } })),
-        };
+        if (Array.isArray(queries?.mainCategory)) {
+            mainCategories = {
+                $or: queries?.mainCategory.map((el) => ({ mainCategory: { $in: [el] } })),
+            };
+        } else {
+            mainCategories = {
+                $or: queries?.mainCategory?.split(',').map((el) => ({ mainCategory: { $in: [el] } })),
+            };
+        }
     }
+
     let priceFilter = {};
     if (queries?.From && queries?.To) {
-        delete formatQueries.From;
-        delete formatQueries.To;
         priceFilter = { price: { $gte: queries?.From, $lte: queries?.To } };
     }
 
-    const category = { ...categories, ...mainCategories, ...priceFilter, ...formatQueries, ...discount };
+    let filterByTagId = {};
+    if (req.query.tagId) {
+        const productTags = await ProductTag.find({ tagId: req.query.tagId });
+        const productIds = productTags.map((productTag) => productTag.productId);
+        filterByTagId = { _id: { $in: productIds } };
+    }
+
+    let combinedConditions = [];
+    if (categories.$or) {
+        combinedConditions = [...combinedConditions, ...categories.$or];
+    }
+    if (mainCategories.$or) {
+        combinedConditions = [...combinedConditions, ...mainCategories.$or];
+    }
+
+    let finalQuery = {};
+    if (combinedConditions.length > 0) {
+        finalQuery = {
+            $or: combinedConditions,
+        };
+    }
+
+    const category = {
+        ...finalQuery,
+        ...priceFilter,
+        ...discount,
+        ...searchResult,
+        ...filterByTagId,
+    };
 
     let queriesCommand;
     queriesCommand = StoreSchema.find(category);
@@ -82,7 +116,10 @@ const fetchProducts = async (req, res) => {
     queriesCommand.skip(skip).limit(limit);
 
     try {
-        const products = await queriesCommand;
+        const products = await queriesCommand.populate({
+            path: 'mainCategory',
+            select: 'title listCategory',
+        });
         const counts = await StoreSchema.find(category).countDocuments();
         res.json({ success: true, counts, products: products });
     } catch (error) {
@@ -103,24 +140,37 @@ const createProduct = async (req, res) => {
             title,
             slug: slugify(req.body.title),
             uses,
-            price: price * (1 - percentage / 100) || price,
+            price,
             description,
             brand,
             category,
-            mainCategory,
+            mainCategory: [mainCategory],
             thumb,
             images,
             discount: { expiryDiscount: Date.now() + expiry * 24 * 60 * 60 * 1000, percentage },
         });
         res.status(200).json({ success: true, message: 'Tạo sản phẩm thành công', createdProduct: newProduct });
     } catch (error) {
+        console.log(error);
         res.status(500).json({ success: false, message: 'Lỗi, tạo sản phẩm thất bại' });
     }
 };
 
 const updateProduct = async (req, res) => {
-    const { title, uses, price, description, brand, category, expiry, percentage, quantity, origin, unitCalculation } =
-        req.body;
+    const {
+        title,
+        uses,
+        price,
+        description,
+        brand,
+        origin,
+        unitCalculation,
+        mainCategory,
+        category,
+        expiry,
+        percentage,
+        quantity,
+    } = req.body;
     const { pid } = req.params;
     const files = req?.files;
     if (files?.thumb) req.body.thumb = files?.thumb[0]?.path;
@@ -130,10 +180,11 @@ const updateProduct = async (req, res) => {
             title,
             slug: slugify(req.body.title),
             uses,
-            price: price * (1 - percentage / 100) || price,
+            price,
             description,
             brand,
             category,
+            mainCategory: [mainCategory],
             unitCalculation,
             quantity,
             origin,
@@ -142,8 +193,9 @@ const updateProduct = async (req, res) => {
             discount: { expiryDiscount: Date.now() + expiry * 24 * 60 * 60 * 1000, percentage },
         };
         const updateProduct = await StoreSchema.findByIdAndUpdate(pid, updatedProduct, { new: true });
-        res.status(200).json({ success: true, message: 'update success', updateProduct: updateProduct });
+        res.status(200).json({ success: true, message: 'Chỉnh sửa thành công', updateProduct: updateProduct });
     } catch (error) {
+        console.log(error);
         res.status(500).json({ success: false, message: 'Chỉnh sửa thất bại' });
     }
 };
@@ -154,7 +206,6 @@ const deleteProduct = async (req, res) => {
         await StoreSchema.deleteOne({ _id: pid });
         res.json({ success: true, message: 'Xóa thành công' });
     } catch (error) {
-        console.log(error);
         res.status(500).json({ success: false, message: 'Xóa thất bại' });
     }
 };
@@ -167,7 +218,6 @@ const ratingProduct = async (req, res) => {
         const ratingProduct = await StoreSchema.findById(pid);
         const alreadyRating = ratingProduct?.ratings?.find((el) => el.postedBy.toString() === _id);
         if (alreadyRating) {
-            //  update comment and star
             await StoreSchema.updateOne(
                 {
                     ratings: { $elemMatch: alreadyRating },
@@ -195,24 +245,10 @@ const ratingProduct = async (req, res) => {
         updateProduct.totalRatings = averageStar.toFixed(1);
         await updateProduct.save();
 
-        return res.json({ success: true, message: 'raings success', ratings: updateProduct });
+        return res.json({ success: true, message: 'Đánh giá thành công', ratings: updateProduct });
     } catch (error) {
-        return res.status(500).json({ success: false, message: 'rating fail' });
+        return res.status(500).json({ success: false, message: 'Có lỗi' });
     }
-};
-
-const uploadImgProduct = async (req, res) => {
-    const { pid } = req.params;
-
-    if (!req.files) return res.status(400).json({ success: false, message: 'Missing inputs' });
-    try {
-        const response = await StoreSchema.findByIdAndUpdate(
-            pid,
-            { $push: { images: { $each: req.files.map((el) => el.path) } } },
-            { new: true },
-        );
-        return res.status(200).json({ success: true, message: '', images: response });
-    } catch (error) {}
 };
 
 module.exports = {
@@ -222,5 +258,4 @@ module.exports = {
     updateProduct,
     ratingProduct,
     deleteProduct,
-    uploadImgProduct,
 };

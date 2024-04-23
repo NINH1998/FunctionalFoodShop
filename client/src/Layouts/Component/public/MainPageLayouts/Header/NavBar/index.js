@@ -2,12 +2,12 @@ import { showCartButtonModal, showLoginModal } from 'Context/Reducer/AppState/Co
 import { IconsButton, LoginModal, ModalUI } from 'Layouts/Component/public/Common';
 import { useEffect, useState, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { searchProducts } from 'Context/Reducer/Products/ProductsAction';
+import { directCategory } from 'Context/Reducer/Products/ProductsAction';
 import { apiGetProducts } from 'Context/StoreApi';
 import { Icons, Images } from 'Layouts/Assets/icons';
 import { googleLogin } from 'Context/Reducer/LoginGooole/ApiLoginGoogle';
 import { useSelector } from 'react-redux';
-import NavigationPhoneMenu from './NavigationMenu/NavigationPhoneMenu';
+import DropdownPhoneCategory from './NavigationMenu/DropdownPhoneCategory';
 import ShoppingCartIcon from './ShoppingCartIcon';
 import UserProfileMenu from './UserProfileMenu';
 import NavigationMenu from './NavigationMenu';
@@ -49,7 +49,7 @@ const NavBar = ({ dispatch, location, navigate }) => {
         const containsValue = /[a-zA-Z]/.test(searchValue.q);
         setIsSearch(!isSearch);
         if (containsValue) {
-            dispatch(searchProducts({ searchValue: searchValue }));
+            dispatch(directCategory({ searchValue: searchValue }));
             navigate(`/${path.TOTAL_PRODUCTS}`);
             setSearchValue({ q: '' });
         }
@@ -88,7 +88,6 @@ const NavBar = ({ dispatch, location, navigate }) => {
                 setIsSearch(false);
                 setProducts([]);
             }
-
             if (
                 navPhoneRef.current &&
                 !isDropdownMenu &&
@@ -107,10 +106,11 @@ const NavBar = ({ dispatch, location, navigate }) => {
 
     useEffect(() => {
         if (isSearch) {
+            console.log(inputRef.current);
             inputRef.current.focus();
-        } else dispatch(searchProducts({ searchValue: null }));
+        }
         // eslint-disable-next-line
-    }, [isSearch, params]);
+    }, [isSearch]);
 
     return (
         <div className="relative w-full">
@@ -170,7 +170,7 @@ const NavBar = ({ dispatch, location, navigate }) => {
                     </nav>
                 </div>
                 <div ref={navPhoneRef}>
-                    <NavigationPhoneMenu
+                    <DropdownPhoneCategory
                         openNavBarMenu={openNavBarMenu}
                         isCancelMouseLeave={isCancelMouseLeave}
                         setIsCancelMouseLeave={setIsCancelMouseLeave}

@@ -48,7 +48,7 @@ const ReplyItem = forwardRef(
             if (tagName) tagName.innerHTML = replyItem?.postedBy?.firstname + ' ' + replyItem?.postedBy?.lastname;
             const rect = ref.current.getBoundingClientRect();
             if (rect.bottom >= window.innerHeight + 50 && rect.top >= 0)
-                ref.current.scrollIntoView({ behavior: 'smooth' });
+                ref.current.scrollIntoView({ behavior: 'auto' });
             setIsUserAnswering(replyItem?._id);
             setIsReply(true);
         };

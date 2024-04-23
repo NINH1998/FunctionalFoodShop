@@ -8,7 +8,7 @@ import {
 } from 'Context/StoreApi';
 import { Button, IconsButton, InputForm } from '../../../../Common';
 import { setUploadCategory } from 'Context/Reducer/Category/CategoryAction';
-import { directCategory } from 'Context/Reducer/Products/ProductsAction';
+import { directCategory, directMainCategory } from 'Context/Reducer/Products/ProductsAction';
 import { memo, useEffect, useState } from 'react';
 import { IoIosAddCircle } from 'react-icons/io';
 import { useSelector } from 'react-redux';
@@ -16,11 +16,12 @@ import { createSlug } from 'Ultils/helper';
 import { useForm } from 'react-hook-form';
 import { Icons } from 'Layouts/Assets/icons';
 import { Link } from 'react-router-dom';
-import Swal from 'sweetalert2';
 import withComponent from 'Hocs/withComponent';
+import Swal from 'sweetalert2';
+import path from 'Router/path';
 
 const { MdDelete, MdEdit, RiArrowGoBackFill, GiCheckMark } = Icons;
-const DropdownMenu = ({ dispatch, current, setIsDropdownMenu, setIsCancelMouseLeave }) => {
+const DropdownMenu = ({ dispatch, navigate, current, setIsDropdownMenu, setIsCancelMouseLeave }) => {
     const {
         formState: { errors },
         handleSubmit,
@@ -45,6 +46,12 @@ const DropdownMenu = ({ dispatch, current, setIsDropdownMenu, setIsCancelMouseLe
 
     const handleClickCategory = (category) => {
         dispatch(directCategory({ valueCategory: category }));
+        setIsDropdownMenu(false);
+    };
+
+    const handleClickToMainCategory = (categoryId) => {
+        navigate(`/${path.TOTAL_PRODUCTS}`);
+        dispatch(directCategory({ valueMainCategory: [categoryId] }));
         setIsDropdownMenu(false);
     };
 
@@ -128,7 +135,6 @@ const DropdownMenu = ({ dispatch, current, setIsDropdownMenu, setIsCancelMouseLe
                                             handleOnclick={() => handleEditCategory(el._id)}
                                             icon={<GiCheckMark />}
                                         />
-
                                         <IconsButton
                                             handleOnclick={() => setIsEditTitle(null)}
                                             icon={<RiArrowGoBackFill />}
@@ -137,7 +143,7 @@ const DropdownMenu = ({ dispatch, current, setIsDropdownMenu, setIsCancelMouseLe
                                 </div>
                             ) : (
                                 <div className="flex items-center ">
-                                    <h4>{el.title}</h4>
+                                    <h4 onClick={() => handleClickToMainCategory(el._id)}>{el.title}</h4>
                                     {(showEditTitle === el._id || phoneEditItem) && isTotalEdit && (
                                         <div className="flex gap-1 absolute right-2 bg-gray-200 shadow-md rounded p-1">
                                             <IconsButton
@@ -166,8 +172,9 @@ const DropdownMenu = ({ dispatch, current, setIsDropdownMenu, setIsCancelMouseLe
                                         <input
                                             type="text"
                                             placeholder="Nhập loại"
-                                            className="text-sm font-normal border-2 border-gray-300 outline-none p-1 pr-12"
+                                            className="border-2 border-gray-300 outline-none p-1 pr-12"
                                             onChange={handleSetItemTitle}
+                                            defaultValue={item.itemTitle}
                                         ></input>
                                         <div className="flex absolute right-4 gap-2">
                                             <IconsButton
@@ -218,7 +225,7 @@ const DropdownMenu = ({ dispatch, current, setIsDropdownMenu, setIsCancelMouseLe
                                             type="text"
                                             placeholder="Nhập loại"
                                             onChange={handleSetItemTitle}
-                                            className="text-sm font-normal border-2 border-gray-300 outline-none p-1 w-full"
+                                            className="font-semibold border-2 border-gray-300 outline-none p-1 w-full"
                                         ></input>
                                         <div className="flex absolute top-1/2 translate-y-[-50%] right-4 gap-2">
                                             <IconsButton
@@ -243,7 +250,7 @@ const DropdownMenu = ({ dispatch, current, setIsDropdownMenu, setIsCancelMouseLe
                 ))}
                 {createNew && isTotalEdit && (
                     <form
-                        className="flex flex-col items-center gap-2 ml-2 min-w-[200px] font-normal"
+                        className="flex flex-col items-center gap-2 px-2 min-w-[200px] font-normal"
                         onSubmit={handleSubmit(handleCreateCategory)}
                     >
                         <InputForm

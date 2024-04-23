@@ -4,6 +4,7 @@ import { memo, useEffect, useState } from 'react';
 import { IconsButton, Loading } from 'Layouts/Component/public/Common';
 import { getCurrentUser } from 'Context/Reducer/User/UserApi';
 import { formatPrice } from 'Ultils/helper';
+import { PuffLoader } from 'react-spinners';
 import { Icons } from 'Layouts/Assets/icons';
 import withComponent from 'Hocs/withComponent';
 import useDebounce from 'Hooks/useDebounce';
@@ -53,23 +54,23 @@ const CartItemsTable = ({ dispatch, defaultQuantity, current, el, index }) => {
         <tbody>
             <tr className="border-b-[2px] border-gray-300">
                 <th className="p-2">{index + 1}</th>
-                <td className="p-2 flex">
+                <td className="p-2 flex items-center">
                     <img
-                        alt=""
+                        alt="thumbnail"
                         src={el.product?.thumb}
-                        className="max-h-[100px] max-w-[100px] object-cover rounded-md cursor-pointer"
+                        className="h-[120px] min-w-[120px] object-cover rounded-md cursor-pointer"
                     ></img>
                     <div className="flex items-start flex-col justify-around p-4">
                         <h4 className="text-xl">{el.product?.title}</h4>
-                        <p className="mb-2">{el.product?.uses}</p>
+                        <p className="mb-2 line-clamp-2">{el.product?.uses}</p>
                         <IconsButton
                             styles="flex items-center justify-center w-6 h-6 cursor-pointer hover:scale-110"
                             handleOnclick={() => handleDeleteCartItem(el.product?._id || el.product?.id)}
                             icon={
                                 isLoading ? (
-                                    <Loading color="#65a30d" size={18} border="!border-[3px]" />
+                                    <Loading shape={<PuffLoader color="#f43f5e" size={24} />} />
                                 ) : (
-                                    <MdDelete color="gray" size={24} />
+                                    <MdDelete color="#f43f5e" size={24} />
                                 )
                             }
                         />

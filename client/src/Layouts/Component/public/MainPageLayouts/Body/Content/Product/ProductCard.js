@@ -2,7 +2,7 @@ import { memo } from 'react';
 
 const ProductCard = ({ thumb, isOpen }) => {
     return (
-        <div className="relative w-full h-auto overflow-hidden rounded-lg">
+        <div className="relative w-full h-auto overflow-hidden rounded-lg z-10">
             <div
                 style={{ background: `url(${thumb}) center center / cover no-repeat` }}
                 className={`w-full pb-[100%] ${isOpen && 'opacity-0'} animation cursor-pointer`}

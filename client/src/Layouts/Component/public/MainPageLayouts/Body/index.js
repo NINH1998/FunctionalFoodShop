@@ -1,15 +1,17 @@
-import { productSwipersCategory } from 'Ultils/Contants';
 import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
-import ProductsSwiperByFieldName from './Content/ProductsSwiperByFieldName';
-import ProductsSwiperBySort from './Content/ProductsSwiperBySort';
+import { getTag } from 'Context/Reducer/TagProduct/tagProductApi';
+import ProductsSwiperByTag from './Content/ProductsSwiperByTag';
 import SwiperWallpaper from './Content/SwiperWallpaper';
+import withComponent from 'Hocs/withComponent';
 
-const MainPageContainer = () => {
-    const { categories } = useSelector((state) => state.categoriesReducer);
-    const location = useLocation();
+const MainPageContainer = ({ dispatch, location }) => {
+    const { tags } = useSelector((state) => state.tagReducer);
     const mainRef = useRef();
+
+    useEffect(() => {
+        dispatch(getTag());
+    }, []);
 
     useEffect(() => {
         mainRef.current.scrollIntoView(true);
@@ -21,11 +23,8 @@ const MainPageContainer = () => {
             <SwiperWallpaper />
             <div className="relative w-full h-full">
                 <div className="h-full desktop:w-main mx-auto">
-                    {productSwipersCategory.map((swiper) => (
-                        <ProductsSwiperBySort key={swiper.id} swiper={swiper} />
-                    ))}
-                    {categories?.map((item) => (
-                        <ProductsSwiperByFieldName key={item._id} category={item} />
+                    {tags?.map((tag) => (
+                        <ProductsSwiperByTag key={tag._id} tag={tag} />
                     ))}
                 </div>
             </div>
@@ -33,4 +32,4 @@ const MainPageContainer = () => {
     );
 };
 
-export default MainPageContainer;
+export default withComponent(MainPageContainer);

@@ -1,7 +1,7 @@
 import { Button, IconsButton } from 'Layouts/Component/public/Common';
 import { apiDeleteUser, apiUpdateUser } from 'Context/StoreApi';
 import { memo, useEffect } from 'react';
-import { block, role } from 'Ultils/Contants';
+import { block, roles } from 'Ultils/Contants';
 import { InputForm } from 'Layouts/Component/public/Common';
 import { useForm } from 'react-hook-form';
 import { Icons } from 'Layouts/Assets/icons';
@@ -163,14 +163,14 @@ const UserTable = ({ edit, setEdit, userInfo, updated, setUpdated }) => {
                                             onChange={(selectedOption) =>
                                                 handleChangeSelect(selectedOption.value, 'role')
                                             }
-                                            options={role}
+                                            options={roles.map((role) => ({ value: role.value, label: role.label }))}
                                             defaultValue={{
                                                 value: el.role,
                                                 label: el.role === 'pilgrims' ? 'User' : 'Admin',
                                             }}
                                         />
                                     ) : (
-                                        <span>{role.find((r) => r.value === el.role).label}</span>
+                                        <span>{roles.find((r) => r.value === el.role).label}</span>
                                     )}
                                 </td>
                                 <td className="p-4">{moment(el.createdAt).format('DD/MM/YYYY')}</td>
@@ -180,7 +180,7 @@ const UserTable = ({ edit, setEdit, userInfo, updated, setUpdated }) => {
                                             onChange={(selectedOption) =>
                                                 handleChangeSelect(selectedOption.value, 'isBlocked')
                                             }
-                                            options={block}
+                                            options={block.map((role) => ({ value: role.value, label: role.label }))}
                                             defaultValue={{
                                                 value: el.isBlocked,
                                                 label: el.isBlocked ? 'Block' : 'Active',

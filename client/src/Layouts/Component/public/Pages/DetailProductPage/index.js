@@ -1,7 +1,8 @@
 import { apiGetProduct, apiGetProducts } from 'Context/StoreApi/Products';
-import { BreadCrumb } from '../index';
 import { useEffect, useRef, useState } from 'react';
+import { apiGetTagByProduct } from 'Context/StoreApi/Tag';
 import { useTranslation } from 'react-i18next';
+import { BreadCrumb } from '../index';
 import { getProduct } from 'Context/Reducer/Products/ProductsAction';
 import { useParams } from 'react-router-dom';
 import { Images } from 'Layouts/Assets/icons';
@@ -15,6 +16,7 @@ const DetailProductPage = ({ dispatch, location }) => {
     const { pid, category } = useParams();
     const [relativeProducts, setRelativeProducts] = useState(null);
     const [updateRating, setUpdateRating] = useState(1);
+    const [tagProduct, setTagProduct] = useState([]);
     const [product, setProduct] = useState(null);
     const breadcrumbRef = useRef(null);
     const { t } = useTranslation();
@@ -35,21 +37,26 @@ const DetailProductPage = ({ dispatch, location }) => {
         }
     };
 
+    const getTagProduct = async () => {
+        const rs = await apiGetTagByProduct(pid);
+        if (rs.success) setTagProduct(rs.tag);
+    };
+
+    useEffect(() => {
+        getTagProduct();
+    }, [product]);
+
     useEffect(() => {
         if (pid) {
             fetchProduct();
             fetchProducts();
+            getTagProduct();
         }
         // eslint-disable-next-line
-    }, [pid]);
+    }, [pid, updateRating]);
 
     useEffect(() => {
-        if (pid) fetchProduct();
-        // eslint-disable-next-line
-    }, [updateRating]);
-
-    useEffect(() => {
-        breadcrumbRef.current.scrollIntoView({ behavior: 'smooth' });
+        breadcrumbRef.current.scrollIntoView({ behavior: 'auto' });
     }, [location.pathname]);
 
     return (
@@ -62,7 +69,7 @@ const DetailProductPage = ({ dispatch, location }) => {
             <div className="justify-center p-6 relative w-full">
                 <div className="flex gap-10 tablet:flex-row phone:flex-col bg-white rounded-lg desktop:w-main phone:w-full m-auto h-full ">
                     <SliderDetailProduct product={product} />
-                    <ProductSpecifications product={product} />
+                    <ProductSpecifications product={product} tagProduct={tagProduct} />
                 </div>
                 <div className="desktop:w-main m-auto tablet:p-4 phone:mt-6 tablet:mt-2">
                     <InfomationDetailProduct

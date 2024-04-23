@@ -1,11 +1,11 @@
-import { memo, useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { directCategory } from 'Context/Reducer/Products/ProductsAction';
 import { navPhoneMenu } from 'Ultils/Contants';
 import { Icons } from 'Layouts/Assets/icons';
 import { Link } from 'react-router-dom';
-import DropdownMenu from './DropdownMenu';
+import DropdownCategory from './DropdownCategory';
 import path from 'Router/path';
-import { filterProducts } from 'Context/Reducer/Products/ProductsAction';
 import withComponent from 'Hocs/withComponent';
 
 const { FaChevronRight } = Icons;
@@ -32,7 +32,7 @@ const NavPhoneMenu = ({ openNavBarMenu, isDropdownMenu, setIsDropdownMenu, setIs
     }, []);
 
     const handlResetFilterProducts = () => {
-        dispatch(filterProducts({ filterProductValue: null }));
+        dispatch(directCategory({ valueMainCategory: null }));
     };
 
     return (
@@ -69,7 +69,7 @@ const NavPhoneMenu = ({ openNavBarMenu, isDropdownMenu, setIsDropdownMenu, setIs
                                                     animate={{ opacity: 1, y: 0 }}
                                                     exit={{ opacity: 0, y: 10 }}
                                                     transition={{ duration: 0.2, ease: 'easeOut' }}
-                                                    className="absolute left-2 top-[110px] z-[999] bg-white p-2 shadow-large rounded-md text-base"
+                                                    className="absolute left-2 top-[110px] z-[999] bg-white p-2 shadow-large rounded-sm text-base"
                                                 >
                                                     <div className="flex gap-1 h-full justify-end items-center hover:underline cursor-pointer">
                                                         <Link
@@ -80,7 +80,7 @@ const NavPhoneMenu = ({ openNavBarMenu, isDropdownMenu, setIsDropdownMenu, setIs
                                                         </Link>
                                                         <FaChevronRight size={14} />
                                                     </div>
-                                                    <DropdownMenu
+                                                    <DropdownCategory
                                                         setIsCancelMouseLeave={setIsCancelMouseLeave}
                                                         setIsDropdownMenu={setIsDropdownMenu}
                                                     />

@@ -7,7 +7,6 @@ const Header = () => {
     const location = useLocation();
     const pathname = location.pathname.split('/').filter((el) => el !== '');
     const { t } = useTranslation();
-
     return (
         <>
             <NavBar />
@@ -15,7 +14,11 @@ const Header = () => {
                 <div className="relative w-full">
                     <img alt="" src={Images.WallPaperCart} className="object-cover w-full h-[400px]"></img>
                     <div className="absolute top-1/2 left-[10%] flex items-center uppercase p-4 text-white">
-                        <h1 className="ml-4 pt-2">{t(pathname)}</h1>
+                        {pathname.length > 2 ? (
+                            <h1 className="ml-4 pt-2">Chi tiết sản phẩm</h1>
+                        ) : (
+                            <h1 className="ml-4 pt-2">{t(pathname)}</h1>
+                        )}
                     </div>
                 </div>
             )}

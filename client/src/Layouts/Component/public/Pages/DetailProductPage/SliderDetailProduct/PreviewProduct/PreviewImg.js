@@ -22,7 +22,6 @@ const PreviewImg = ({ product, openPreview, dispatch }) => {
                             loop={true}
                             arrayData={product?.images}
                             styles={'max-w-[1000px] h-[550px] max-phone:h-[300px] object-fill'}
-                            effect="fade"
                             thumbsSwiper={thumbsSwiper2}
                             isZoom={true}
                         ></PreviewSwiper>

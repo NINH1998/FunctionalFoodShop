@@ -58,7 +58,7 @@ const CommentItem = ({ comment, current, setUpdate, update, dispatch }) => {
         setIsReply(true);
         const rect = scrollToCommentRef.current.getBoundingClientRect();
         if (scrollToCommentRef.current && rect.bottom >= window.innerHeight + 50 && rect.top >= 0)
-            scrollToCommentRef.current.scrollIntoView({ behavior: 'smooth' });
+            scrollToCommentRef.current.scrollIntoView({ behavior: 'auto' });
     };
 
     const handleLike = async (cid) => {

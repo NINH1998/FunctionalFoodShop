@@ -40,7 +40,7 @@
     }
 
     .btn-primary {
-        @apply flex items-center p-2 bg-primary rounded-md hover:bg-secondary text-white font-semibold select-none cursor-pointer animation-200;
+        @apply flex items-center p-2 bg-main rounded-md hover:bg-secondary text-white font-semibold select-none cursor-pointer animation-200 shadow-small;
     }
 
     .link-btn-primary {

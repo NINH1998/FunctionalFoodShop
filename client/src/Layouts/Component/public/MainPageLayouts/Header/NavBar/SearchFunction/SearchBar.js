@@ -61,7 +61,7 @@ const SearchBar = forwardRef(
                                         transition={{ duration: 0.2, ease: 'linear' }}
                                         type="text"
                                         placeholder="Tìm kiếm sản phẩm..."
-                                        className="bg-white ml-2 outline-none text-sm text-black bg-transparent"
+                                        className="bg-white ml-2 outline-none text-sm text-black bg-transparent h-full"
                                         onChange={(e) => setSearchValue({ q: e.target.value })}
                                         value={searchValue.q}
                                     ></motion.input>

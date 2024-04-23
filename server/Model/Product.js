@@ -17,7 +17,7 @@ const StoreSchema = new Schema(
         },
         thumb: {
             type: String,
-            required: true,
+            // required: true,
         },
         images: {
             type: Array,
@@ -31,7 +31,6 @@ const StoreSchema = new Schema(
         },
         brand: {
             type: String,
-            required: true,
         },
         origin: {
             type: String,
@@ -50,19 +49,16 @@ const StoreSchema = new Schema(
             },
             expiryDiscount: {
                 type: Date,
+                default: Date.now(),
             },
         },
         sold: {
             type: Number,
             default: 0,
         },
-        mainCategory: {
-            type: String,
-            required: true,
-        },
+        mainCategory: [{ type: mongoose.Types.ObjectId, ref: 'CategoryProduct' }],
         category: {
             type: String,
-            required: true,
         },
         quantity: {
             type: Number,

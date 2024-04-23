@@ -53,9 +53,11 @@ const InfomationDetailProduct = ({ totalRatings, ratings, productName, pid, desc
                     }}
                 />
             </div>
-            <div className="border-2 overflow-auto">
-                <div className="w-full p-4 border-gray-300 max-h-[1500px]">
-                    {activeTab === 0 && <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(description) }} />}
+            <div className="border-2">
+                <div className="w-full p-4 border-gray-300">
+                    {activeTab === 0 && (
+                        <div id="detail" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(description) }} />
+                    )}
                     {activeTab === 1 && (
                         <div className="flex flex-col gap-2">
                             <RatingProductFunction

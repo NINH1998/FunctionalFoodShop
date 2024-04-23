@@ -8,7 +8,7 @@ const CloseModalButton = ({ onClose, iconSize, styles }) => {
     return (
         <span
             onClick={onClose}
-            className={clsx(styles ? styles : 'absolute top-2 right-2 p-1 hover:bg-gray-200 cursor-pointer')}
+            className={clsx(styles ? styles : 'absolute top-1 right-1 p-1 hover:bg-gray-200 cursor-pointer z-[999]')}
         >
             <IoMdClose size={iconSize || 20} />
         </span>
