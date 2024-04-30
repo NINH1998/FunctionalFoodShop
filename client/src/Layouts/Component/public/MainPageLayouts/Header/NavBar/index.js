@@ -1,12 +1,12 @@
 import { showCartButtonModal, showLoginModal } from 'Context/Reducer/AppState/CommonAction';
 import { IconsButton, LoginModal, ModalUI } from 'Layouts/Component/public/Common';
 import { useEffect, useState, useRef } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
 import { directCategory } from 'Context/Reducer/Products/ProductsAction';
 import { apiGetProducts } from 'Context/StoreApi';
 import { Icons, Images } from 'Layouts/Assets/icons';
 import { googleLogin } from 'Context/Reducer/LoginGooole/ApiLoginGoogle';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import DropdownPhoneCategory from './NavigationMenu/DropdownPhoneCategory';
 import ShoppingCartIcon from './ShoppingCartIcon';
 import UserProfileMenu from './UserProfileMenu';
@@ -22,7 +22,6 @@ const { TiThMenu } = Icons;
 
 const NavBar = ({ dispatch, location, navigate }) => {
     const { mes } = useSelector((state) => state.userReducer);
-    const [params] = useSearchParams();
     const [openCartModal, setOpenCartModal] = useState(false);
     const [isSearch, setIsSearch] = useState(false);
     const [searchValue, setSearchValue] = useState({ q: '' });
@@ -106,7 +105,6 @@ const NavBar = ({ dispatch, location, navigate }) => {
 
     useEffect(() => {
         if (isSearch) {
-            console.log(inputRef.current);
             inputRef.current.focus();
         }
         // eslint-disable-next-line

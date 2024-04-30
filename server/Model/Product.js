@@ -42,6 +42,10 @@ const StoreSchema = new Schema(
             type: Number,
             required: true,
         },
+        discountedPrice: {
+            type: Number,
+            default: 0,
+        },
         discount: {
             percentage: {
                 type: Number,

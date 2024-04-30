@@ -18,11 +18,15 @@ const DetailProductPage = ({ dispatch, location }) => {
     const [updateRating, setUpdateRating] = useState(1);
     const [tagProduct, setTagProduct] = useState([]);
     const [product, setProduct] = useState(null);
+    const [isLoadingProduct, setIsLoadingProduct] = useState(false);
     const breadcrumbRef = useRef(null);
     const { t } = useTranslation();
 
     const fetchProduct = async () => {
+        setIsLoadingProduct(true);
         const response = await apiGetProduct(pid);
+        setIsLoadingProduct(false);
+
         if (response.success) {
             setProduct(response?.product);
             dispatch(getProduct({ product: response.product }));
@@ -68,7 +72,7 @@ const DetailProductPage = ({ dispatch, location }) => {
             </div>
             <div className="justify-center p-6 relative w-full">
                 <div className="flex gap-10 tablet:flex-row phone:flex-col bg-white rounded-lg desktop:w-main phone:w-full m-auto h-full ">
-                    <SliderDetailProduct product={product} />
+                    <SliderDetailProduct product={product} isLoadingProduct={isLoadingProduct} />
                     <ProductSpecifications product={product} tagProduct={tagProduct} />
                 </div>
                 <div className="desktop:w-main m-auto tablet:p-4 phone:mt-6 tablet:mt-2">

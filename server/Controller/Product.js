@@ -26,7 +26,7 @@ const getProduct = async (req, res) => {
 
 const fetchProducts = async (req, res) => {
     const queries = { ...req.query };
-    const excludeFiled = ['limit', 'sort', 'page', 'fileds'];
+    const excludeFiled = ['limit', 'sort', 'page'];
     excludeFiled.forEach((el) => delete queries[el]);
 
     let searchResult = {};
@@ -85,7 +85,6 @@ const fetchProducts = async (req, res) => {
             $or: combinedConditions,
         };
     }
-
     const category = {
         ...finalQuery,
         ...priceFilter,

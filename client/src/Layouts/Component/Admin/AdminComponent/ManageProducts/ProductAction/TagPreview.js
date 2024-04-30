@@ -142,16 +142,16 @@ const TagPreview = ({ tagsCreated, setTagsCreated, editProduct }) => {
                     <div className="flex flex-wrap flex-row gap-2">
                         {tagsCreated?.map((el) => (
                             <span
-                                style={{ backgroundColor: el.colorTag }}
+                                style={{ backgroundColor: el?.colorTag }}
                                 className="relative rounded-full px-2 py-1 text-white"
                                 key={el?._id}
                             >
                                 <IconsButton
-                                    handleOnclick={() => handleRemoveTag(el._id)}
+                                    handleOnclick={() => handleRemoveTag(el?._id)}
                                     styles="absolute right-[-8px] top-[-8px] rounded-full p-1 bg-gray-200 cursor-pointer hover:bg-gray-300"
                                     icon={<IoMdClose color="black" />}
                                 />
-                                {el.title}
+                                {el?.title}
                             </span>
                         ))}
                     </div>

@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import { useSearchParams, createSearchParams } from 'react-router-dom';
 import { apiDeleteProduct, apiGetProducts } from 'Context/StoreApi';
 import { InputField, Loading } from 'Layouts/Component/public/Common';
@@ -34,8 +34,29 @@ const ManageProducts = ({ navigate, location }) => {
     };
 
     const debounceValue = useDebounce(value.q, 500);
-    useLayoutEffect(() => {
+    useEffect(() => {
         const queries = Object.fromEntries([...params]);
+        if (queries.q) {
+            queries.q = debounceValue;
+        }
+
+        if (currentPage > 1) {
+            queries.page = currentPage;
+        } else delete queries.page;
+
+        navigate(
+            {
+                pathname: location.pathname,
+                search: createSearchParams({ ...queries }).toString(),
+            },
+            { replace: true },
+        );
+        handleSearchProduct({ ...queries });
+
+        // eslint-disable-next-line
+    }, [update, currentPage]);
+
+    useEffect(() => {
         if (debounceValue) {
             navigate(
                 {
@@ -45,20 +66,10 @@ const ManageProducts = ({ navigate, location }) => {
                 { replace: true },
             );
             setCurrentPage(1);
-            handleSearchProduct({ q: debounceValue });
-        } else {
-            delete queries.q;
-            navigate(
-                {
-                    pathname: location.pathname,
-                    search: createSearchParams({ ...queries, page: currentPage }).toString(),
-                },
-                { replace: true },
-            );
-            handleSearchProduct({ ...queries });
+            handleSearchProduct({ q: debounceValue, page: 1 });
         }
         // eslint-disable-next-line
-    }, [debounceValue, update, currentPage]);
+    }, [debounceValue]);
 
     const changePage = (page) => {
         setCurrentPage(page);

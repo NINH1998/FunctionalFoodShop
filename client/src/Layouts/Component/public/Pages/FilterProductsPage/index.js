@@ -4,9 +4,10 @@ import { BreadCrumb } from '../index';
 import FilteredProducts from './FilteredProducts';
 import withComponent from 'Hocs/withComponent';
 
-const ProductsPage = ({ location }) => {
+const ProductsPage = () => {
     const breadcrumbRef = useRef();
     const [params] = useSearchParams();
+
     useEffect(() => {
         breadcrumbRef.current.scrollIntoView({ behavior: 'auto' });
     }, [params]);

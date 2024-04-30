@@ -1,3 +1,13 @@
+import {
+    FacebookShareButton,
+    FacebookIcon,
+    EmailShareButton,
+    EmailIcon,
+    TwitterShareButton,
+    TwitterIcon,
+    TelegramShareButton,
+    TelegramIcon,
+} from 'react-share';
 import { apiUpdateCart, apiUpdateWishlist } from 'Context/StoreApi';
 import { formatPrice, starNumber } from 'Ultils/helper';
 import { Button, IconsButton } from 'Layouts/Component/public/Common';
@@ -19,6 +29,7 @@ const ProductSpecifications = ({ product, current, dispatch, currentCart, tagPro
     const { pid } = useParams();
     const detailProductInfoList = detailProductInfo(product);
     const [quantity, setQuantity] = useState(1);
+    const currentUrl = window.location.href;
 
     const handleAddToWishlist = async () => {
         const response = await apiUpdateWishlist(pid);
@@ -150,16 +161,33 @@ const ProductSpecifications = ({ product, current, dispatch, currentCart, tagPro
                 {tagProduct?.map((el) => (
                     <Link
                         to={`/${path.TOTAL_PRODUCTS}`}
-                        onClick={() => handleFilterByTag(el._id)}
-                        style={{ backgroundColor: el.colorTag }}
+                        onClick={() => handleFilterByTag(el?._id)}
+                        style={{ backgroundColor: el?.colorTag }}
                         className="flex gap-2 items-center relative rounded-full px-2 py-1 text-white
                          text-sm font-semibold hover:opacity-80 animation-200 cursor-pointer"
-                        key={el._id}
+                        key={el?._id}
                     >
-                        {<img alt="" src={el.iconTag} className="w-5 h-5" />}
-                        {el.title}
+                        {<img alt="" src={el?.iconTag} className="w-5 h-5" />}
+                        {el?.title}
                     </Link>
                 ))}
+            </div>
+            <div className="flex flex-col mt-4">
+                <strong>Chia sẻ:</strong>
+                <div className="flex gap-1">
+                    <FacebookShareButton url={currentUrl}>
+                        <FacebookIcon size={24} round={true} />
+                    </FacebookShareButton>
+                    <EmailShareButton url={currentUrl}>
+                        <EmailIcon size={24} round={true} />
+                    </EmailShareButton>
+                    <TwitterShareButton url={currentUrl}>
+                        <TwitterIcon size={24} round={true} />
+                    </TwitterShareButton>
+                    <TelegramShareButton url={currentUrl}>
+                        <TelegramIcon size={24} round={true} />
+                    </TelegramShareButton>
+                </div>
             </div>
         </div>
     );

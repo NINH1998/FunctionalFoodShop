@@ -41,6 +41,7 @@ i18n.use(initReactI18next).init({
                 'djam-tong-hop': 'Đạm tổng hợp',
                 'nam-linh-chi-han-quoc': 'Nấm linh chi Hàn Quốc',
                 tra: 'Trà',
+                'omega-3': 'Omega 3',
             },
         },
     },

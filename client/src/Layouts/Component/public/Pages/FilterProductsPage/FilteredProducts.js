@@ -14,7 +14,7 @@ import Product from '../../MainPageLayouts/Body/Content/Product/ProductContainer
 const { FaChevronLeft, FaChevronRight } = Icons;
 
 const FilteredProducts = ({ dispatch, navigate, location }) => {
-    const { searchValue, products, isLoading, valueCategory, valueMainCategory, tagId, clearParams } = useSelector(
+    const { searchValue, products, isLoading, valueMainCategory, tagId, clearParams } = useSelector(
         (state) => state.productsReducer,
     );
     const [params] = useSearchParams();
@@ -49,6 +49,10 @@ const FilteredProducts = ({ dispatch, navigate, location }) => {
             queries.page = currentPage;
         } else delete queries.page;
 
+        if (sort) {
+            queries.sort = sort;
+        }
+
         if (tagId) {
             queries.tagId = tagId;
         }
@@ -56,7 +60,7 @@ const FilteredProducts = ({ dispatch, navigate, location }) => {
         if (valueMainCategory?.join(',')) {
             queries.mainCategory = valueMainCategory.join(',');
         } else delete queries.mainCategory;
-        console.log(searchValue);
+
         navigate(
             {
                 pathname: location.pathname,
@@ -67,20 +71,20 @@ const FilteredProducts = ({ dispatch, navigate, location }) => {
             },
             { replace: true },
         );
+
+        if (isProductPath && isProductPath !== 'san-pham') {
+            queries.category = t(isProductPath);
+        }
+
         fetchProducts({
             ...queries,
             ...searchValue,
-            category: queries.category || (t(isProductPath) !== 'Sản phẩm' ? t(isProductPath) : null),
         });
         // eslint-disable-next-line
-    }, [clearParams, isProductPath, currentPage, searchValue, valueMainCategory]);
+    }, [clearParams, isProductPath, sort, currentPage, searchValue, valueMainCategory]);
 
     const handleFilter = () => {
         const queries = Object.fromEntries([...params]);
-
-        if (sort) {
-            queries.sort = sort;
-        }
 
         if (selectedMainField.join(',')) {
             queries.mainCategory = selectedMainField.join(',');
@@ -118,6 +122,17 @@ const FilteredProducts = ({ dispatch, navigate, location }) => {
             ...discount,
         });
     };
+
+    useEffect(() => {
+        if (clearParams) {
+            setSort('');
+            setCurrentPage(1);
+            setSeclected([]);
+            setSelectedMainField([]);
+            setOpenFilter(false);
+            setPrice({ From: '', To: '' });
+        }
+    }, [clearParams, sort]);
 
     useLayoutEffect(() => {
         if (t(isProductPath) !== 'Sản phẩm') setCurrentPage(1);

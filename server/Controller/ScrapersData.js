@@ -38,25 +38,10 @@ const insertProduct = async (req, res) => {
 
 const editPRoduct = async (req, res) => {
     try {
-        const products = await StoreSchema.find({
-            $or: [
-                { category: { $regex: 'Collagen', $options: 'i' } },
-                { category: { $regex: 'Hoa anh thảo', $options: 'i' } },
-                { category: { $regex: 'Omega3', $options: 'i' } },
-                { category: { $regex: 'Tăng cân, giảm cân', $options: 'i' } },
-                { category: { $regex: 'Viên uống đẹp da', $options: 'i' } },
-                { category: { $regex: 'Vitamin', $options: 'i' } },
-            ],
-        });
-
+        const products = await StoreSchema.find();
         for (const product of products) {
-            const category = await categoryProducts.findOne({
-                'listCategory.itemTitle': { $regex: product.category, $options: 'i' },
-            });
-            if (category) {
-                product.mainCategory.push(category._id);
-                await product.save();
-            }
+            product.discountedPrice = Math.round(product.price * (1 - product.discount.percentage / 100));
+            product.save();
         }
         return res.status(200).json({ message: 'Done!' });
     } catch (error) {

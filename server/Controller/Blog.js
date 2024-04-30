@@ -36,7 +36,6 @@ const createBlog = async (req, res) => {
 const updateBlog = async (req, res) => {
     const { bid } = req.params;
     if (Object.keys(req.body).length === 0) return res.status(400).json({ success: false, message: 'missing input' });
-    console.log(Object.keys(req.body).length);
     try {
         const response = await Blog.findByIdAndUpdate(bid, req.body, { new: true });
         res.status(200).json({ success: true, message: 'update blog success', updatedBlog: response });
@@ -65,13 +64,21 @@ const likeBlog = async (req, res) => {
         const blog = await Blog.findById(bid);
         const alreadydislike = blog?.dislikes?.find((el) => el.toString() === _id);
         if (alreadydislike) {
-            const response = await Blog.findByIdAndUpdate(bid, { $pull: { dislikes: _id }, isDisliked: false }, { new: true });
+            const response = await Blog.findByIdAndUpdate(
+                bid,
+                { $pull: { dislikes: _id }, isDisliked: false },
+                { new: true },
+            );
             return res.json({ success: true, rs: response });
         }
 
         const isLiked = blog?.likes?.find((el) => el.toString() === _id);
         if (isLiked) {
-            const response = await Blog.findByIdAndUpdate(bid, { $pull: { likes: _id }, isLiked: false }, { new: true });
+            const response = await Blog.findByIdAndUpdate(
+                bid,
+                { $pull: { likes: _id }, isLiked: false },
+                { new: true },
+            );
             return res.json({ success: true, rs: response });
         } else {
             const response = await Blog.findByIdAndUpdate(bid, { $push: { likes: _id }, isLiked: true }, { new: true });
@@ -90,16 +97,28 @@ const dislikeBlog = async (req, res) => {
         const blog = await Blog.findById(bid);
         const alreadyLike = blog?.likes?.find((el) => el.toString() === _id);
         if (alreadyLike) {
-            const response = await Blog.findByIdAndUpdate(bid, { $pull: { likes: _id }, isLiked: false }, { new: true });
+            const response = await Blog.findByIdAndUpdate(
+                bid,
+                { $pull: { likes: _id }, isLiked: false },
+                { new: true },
+            );
             return res.json({ success: true, rs: response });
         }
 
         const isDisLiked = blog?.dislikes?.find((el) => el.toString() === _id);
         if (isDisLiked) {
-            const response = await Blog.findByIdAndUpdate(bid, { $pull: { dislikes: _id }, isDisliked: false }, { new: true });
+            const response = await Blog.findByIdAndUpdate(
+                bid,
+                { $pull: { dislikes: _id }, isDisliked: false },
+                { new: true },
+            );
             return res.json({ success: true, rs: response });
         } else {
-            const response = await Blog.findByIdAndUpdate(bid, { $push: { dislikes: _id }, isDisliked: true }, { new: true });
+            const response = await Blog.findByIdAndUpdate(
+                bid,
+                { $push: { dislikes: _id }, isDisliked: true },
+                { new: true },
+            );
             return res.json({ success: true, rs: response });
         }
     } catch (error) {

@@ -19,7 +19,7 @@ export const createSlug = (string) => {
     // }
 };
 
-export const formatPrice = (number) => Number(number?.toFixed(3)).toLocaleString();
+export const formatPrice = (number) => Number((Math.round(number / 1000) * 1000)?.toFixed(3)).toLocaleString();
 
 export const generateArray = (start, end) => {
     const length = end + 1 - start;

@@ -17,13 +17,6 @@ const commentSchema = require('../Model/Comments');
 const StoreSchema = require('../Model/Product');
 const Bill = require('../Model/Bill');
 
-// async function clearQueue() {
-//     await dislikeQueue.clean(0, 'completed');
-//     console.log('Queue cleared successfully');
-// }
-
-// clearQueue();
-
 likeQueue.process(async (job, done) => {
     const { commentId, _id } = job.data;
     try {

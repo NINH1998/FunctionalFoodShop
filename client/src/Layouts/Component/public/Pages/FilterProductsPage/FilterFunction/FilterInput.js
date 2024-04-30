@@ -30,9 +30,7 @@ const FilterInput = ({
     const { pathname } = location;
     const isProductPath = pathname.replace('/', '');
     const [bestPrice, setBestPrice] = useState(null);
-    const [bestPriceDiscount, setBestPriceDiscount] = useState(null);
     const [lowestPrice, setLowestPrice] = useState(null);
-    const [lowestPriceDiscount, setLowestPriceDiscount] = useState(null);
     const filterRef = useRef();
 
     const hanldeChekbox = (e) => {
@@ -48,35 +46,29 @@ const FilterInput = ({
     };
 
     const sortBestPriceProduct = async () => {
-        const queries = Object.fromEntries([...params]);
         const response = await apiGetProducts({ sort: '-price', limit: 1 });
         if (response.success) {
-            setBestPrice(response.products[0]?.price);
-            setBestPriceDiscount(response.products[0]?.discount.percentage);
+            setBestPrice(response.products[0]?.discountedPrice);
             setPrice((prev) => {
-                const newBestPrice = response.products[0]?.price;
-                return newBestPrice > prev.To ? { ...prev, To: queries.To ? queries.To : newBestPrice } : prev;
+                const newBestPrice = response.products[0]?.discountedPrice;
+                return newBestPrice > prev.To ? { ...prev, To: newBestPrice } : prev;
             });
         }
     };
 
     const lowestPriceProduct = async () => {
-        const queries = Object.fromEntries([...params]);
         const response = await apiGetProducts({ sort: 'price', limit: 1 });
         if (response.success) {
-            setLowestPrice(response.products[0]?.price);
-            setLowestPriceDiscount(response.products[0]?.discount.percentage);
+            setLowestPrice(response.products[0]?.discountedPrice);
             setPrice((prev) => {
-                const newLowestPrice = response.products[0]?.price;
+                const newLowestPrice = response.products[0]?.discountedPrice;
                 return newLowestPrice > prev.From ? { ...prev, From: newLowestPrice } : prev;
             });
         }
     };
-
     useEffect(() => {
         sortBestPriceProduct();
         lowestPriceProduct();
-
         // eslint-disable-next-line
     }, [params]);
 
@@ -163,18 +155,8 @@ const FilterInput = ({
                             <div>
                                 <p className="mt-4 text-sm text-center">
                                     Tìm kiếm giá từ{' '}
-                                    <span className="font-semibold text-red-500">
-                                        {formatPrice(
-                                            Math.round((price?.From / 1000) * (1 - lowestPriceDiscount / 100)) * 1000,
-                                        )}
-                                    </span>{' '}
-                                    đến{' '}
-                                    <span className="font-semibold  text-red-500">
-                                        {formatPrice(
-                                            Math.round((price?.To / 1000) * (1 - bestPriceDiscount / 100)) * 1000,
-                                        )}
-                                    </span>{' '}
-                                    VNĐ
+                                    <span className="font-semibold text-red-500">{formatPrice(price?.From)}</span> đến{' '}
+                                    <span className="font-semibold  text-red-500">{formatPrice(price?.To)}</span> VNĐ
                                 </p>
                             </div>
                             <div className="flex gap-2 items-center justify-center mt-4">

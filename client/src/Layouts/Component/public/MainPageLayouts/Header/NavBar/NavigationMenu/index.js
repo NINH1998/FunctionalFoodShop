@@ -1,6 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { directCategory } from 'Context/Reducer/Products/ProductsAction';
-import { useSelector } from 'react-redux';
 import { Navigation } from 'Ultils/Contants';
 import { memo } from 'react';
 import { Link } from 'react-router-dom';
@@ -8,9 +7,8 @@ import DropdownCategory from './DropdownCategory';
 import withComponent from 'Hocs/withComponent';
 
 const NavigationMenu = ({ dispatch, setIsDropdownMenu, isDropdownMenu, setIsCancelMouseLeave, isCancelMouseLeave }) => {
-    const { clearParams } = useSelector((state) => state.productsReducer);
     const handleClickToNavProduct = () => {
-        dispatch(directCategory({ clearParams: !clearParams }));
+        dispatch(directCategory({ clearParams: Math.random() }));
         setIsDropdownMenu(false);
     };
 

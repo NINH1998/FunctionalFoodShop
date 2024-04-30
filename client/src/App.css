@@ -44,7 +44,7 @@
     }
 
     .link-btn-primary {
-        @apply hover:underline ml-1 text-primary cursor-pointer;
+        @apply hover:underline ml-1 text-main cursor-pointer;
     }
 
     .calc-btn {
@@ -52,7 +52,7 @@
     }
 
     .paginate-btn {
-        @apply flex items-center justify-center w-10 h-10 hover:bg-lime-500 animation-200 rounded-full bg-primary;
+        @apply flex items-center justify-center w-10 h-10 hover:bg-lime-500 animation-200 rounded-full bg-main;
     }
 
     .breadcrumb-link-btn {

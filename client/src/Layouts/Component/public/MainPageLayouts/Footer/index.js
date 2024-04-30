@@ -1,10 +1,16 @@
 import { Navigation, ownerInfomation, storePolicy } from 'Ultils/Contants';
+import { directCategory } from 'Context/Reducer/Products/ProductsAction';
 import { useSelector } from 'react-redux';
 import { Images } from 'Layouts/Assets/icons';
 import { Link } from 'react-router-dom';
+import path from 'Router/path';
+import withComponent from 'Hocs/withComponent';
 
-const Footer = () => {
+const Footer = ({ dispatch }) => {
     const { categories } = useSelector((state) => state.categoriesReducer);
+    const handleClickToLink = (categoryId) => {
+        dispatch(directCategory({ valueMainCategory: [categoryId] }));
+    };
 
     return (
         <footer>
@@ -59,7 +65,7 @@ const Footer = () => {
                             <h4 className="uppercase font-bold pb-4">Hỗ trợ khách hàng</h4>
                             <ul>
                                 {Navigation.map((el) => (
-                                    <li className="py-2 hover:text-secondary animation-200 text-gray-600" key={el.id}>
+                                    <li className="py-2 hover:text-main animation-200 text-gray-600" key={el.id}>
                                         <Link to={el.path}>{el.value}</Link>
                                     </li>
                                 ))}
@@ -69,8 +75,10 @@ const Footer = () => {
                             <h4 className="uppercase font-bold pb-4 ">Doanh mục sản phẩm</h4>
                             <ul>
                                 {categories?.map((el) => (
-                                    <li key={el._id} className="py-2 hover:text-secondary animation-200 text-gray-600">
-                                        <Link to="/">{el.title}</Link>
+                                    <li key={el._id} className="py-2 hover:text-main animation-200 text-gray-600">
+                                        <Link to={`/${path.TOTAL_PRODUCTS}`} onClick={() => handleClickToLink(el._id)}>
+                                            {el.title}
+                                        </Link>
                                     </li>
                                 ))}
                             </ul>
@@ -87,4 +95,4 @@ const Footer = () => {
     );
 };
 
-export default Footer;
+export default withComponent(Footer);

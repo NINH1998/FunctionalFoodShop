@@ -44,8 +44,7 @@ const DropdownMenu = ({ dispatch, navigate, current, setIsDropdownMenu, setIsCan
         }
     }, []);
 
-    const handleClickCategory = (category) => {
-        dispatch(directCategory({ valueCategory: category }));
+    const handleClickCategory = () => {
         setIsDropdownMenu(false);
     };
 
@@ -143,7 +142,12 @@ const DropdownMenu = ({ dispatch, navigate, current, setIsDropdownMenu, setIsCan
                                 </div>
                             ) : (
                                 <div className="flex items-center ">
-                                    <h4 onClick={() => handleClickToMainCategory(el._id)}>{el.title}</h4>
+                                    <h4
+                                        onClick={() => handleClickToMainCategory(el._id)}
+                                        className="animation-200 hover:text-main text-gray-500 cursor-pointer"
+                                    >
+                                        {el.title}
+                                    </h4>
                                     {(showEditTitle === el._id || phoneEditItem) && isTotalEdit && (
                                         <div className="flex gap-1 absolute right-2 bg-gray-200 shadow-md rounded p-1">
                                             <IconsButton
@@ -193,8 +197,8 @@ const DropdownMenu = ({ dispatch, navigate, current, setIsDropdownMenu, setIsCan
                                     <div className="relative w-full flex">
                                         <Link to={`/${createSlug(item.itemTitle)}`} className="w-full">
                                             <div
-                                                onClick={() => handleClickCategory(item.itemTitle)}
-                                                className="flex justify-between items-center hover:bg-gray-100 border-b-2 animation-200 hover:text-main animation-200 text-gray-500 p-2"
+                                                onClick={handleClickCategory}
+                                                className="flex justify-between items-center border-b-2 animation-200 hover:text-main text-gray-500 p-2"
                                             >
                                                 {item.itemTitle}
                                             </div>
