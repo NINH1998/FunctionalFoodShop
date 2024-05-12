@@ -1,5 +1,5 @@
 import { apiGetProduct, apiGetProducts } from 'Context/StoreApi/Products';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { apiGetTagByProduct } from 'Context/StoreApi/Tag';
 import { useTranslation } from 'react-i18next';
 import { BreadCrumb } from '../index';
@@ -50,7 +50,7 @@ const DetailProductPage = ({ dispatch, location }) => {
         getTagProduct();
     }, [product]);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (pid) {
             fetchProduct();
             fetchProducts();

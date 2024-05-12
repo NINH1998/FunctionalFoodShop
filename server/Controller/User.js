@@ -166,9 +166,9 @@ const verifyOTP = asyncHandler(async (req, res) => {
         user.otp = null;
         user.otpExpiration = null;
         await user.save();
-        res.json({ success: true, message: 'OTP verified. Registration successful.' });
+        res.json({ success: true, message: 'Đăng kí thành công' });
     } catch (error) {
-        res.status(500).json({ success: false, message: 'OTP verification failed.' });
+        res.status(500).json({ success: false, message: 'Xảy ra lỗi' });
     }
 });
 

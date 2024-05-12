@@ -5,22 +5,24 @@ import { apiverifyOTP } from 'Context/StoreApi';
 import withComponent from 'Hocs/withComponent';
 import Swal from 'sweetalert2';
 
-const OTPRegisterAuthModal = ({ payload, useSelector, dispatch }) => {
+const OTPRegisterAuthModal = ({ payload, useSelector, dispatch, resetValueInput }) => {
     const { isOtpModal } = useSelector((state) => state.appReducer);
     const [nonOTP, setNonOTP] = useState(false);
     const [otp, setOtp] = useState('');
-
+    console.log(payload.email);
     const handleAuthOTP = async () => {
         const response = await apiverifyOTP({ otp, email: payload.email });
         if (response?.success) {
             Swal.fire('Congratulations', response?.message, 'success');
             dispatch(showAuthOtpModal({ isOtpModal: false }));
             setOtp('');
+            resetValueInput();
         } else {
             if (otp === '') {
                 setNonOTP(true);
             } else Swal.fire('Failure', response?.message, 'error');
             setOtp('');
+            resetValueInput();
         }
     };
 
