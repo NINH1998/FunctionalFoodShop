@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import DropdownPhoneCategory from './NavigationMenu/DropdownPhoneCategory';
 import ShoppingCartIcon from './ShoppingCartIcon';
+import NotificationMenu from './NotificationMenu';
 import UserProfileMenu from './UserProfileMenu';
 import NavigationMenu from './NavigationMenu';
 import withComponent from 'Hocs/withComponent';
@@ -18,9 +19,9 @@ import SearchBar from './SearchFunction/SearchBar';
 import path from 'Router/path';
 import Swal from 'sweetalert2';
 
-const { TiThMenu } = Icons;
+const { TiThMenu, IoNotifications } = Icons;
 
-const NavBar = ({ dispatch, location, navigate }) => {
+const NavBar = ({ dispatch, location, navigate, current }) => {
     const { mes } = useSelector((state) => state.userReducer);
     const [openCartModal, setOpenCartModal] = useState(false);
     const [isSearch, setIsSearch] = useState(false);
@@ -109,7 +110,7 @@ const NavBar = ({ dispatch, location, navigate }) => {
         }
         // eslint-disable-next-line
     }, [isSearch]);
-
+    console.log(current);
     return (
         <div className="relative w-full">
             <div className="fixed top-0 z-[988] w-screen shadow-small bg-white">
@@ -161,6 +162,7 @@ const NavBar = ({ dispatch, location, navigate }) => {
                                         icon={<TiThMenu size={24} color="white" />}
                                     />
                                 </div>
+                                {current && current.role === 'enikk' && <NotificationMenu />}
                                 <UserProfileMenu />
                                 <LoginModal />
                             </div>

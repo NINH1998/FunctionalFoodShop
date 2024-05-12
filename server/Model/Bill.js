@@ -31,6 +31,10 @@ var billSchema = new mongoose.Schema(
             default: 'processing',
             enum: ['processing', 'cancelled', 'successed'],
         },
+        viewed: {
+            type: Boolean,
+            default: false,
+        },
         coupon: {
             type: mongoose.Types.ObjectId,
             ref: 'coupon',

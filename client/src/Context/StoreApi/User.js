@@ -98,14 +98,14 @@ export const apiRemoveAllCart = (data) =>
         data,
     });
 
-export const apiGetBill = (params) =>
+export const apiGetBillsByUser = (params) =>
     axios({
         url: '/api/bill/',
         method: 'get',
         params,
     });
 
-export const apiGetBills = (params) =>
+export const apiGetBillsByAdmin = (params) =>
     axios({
         url: '/api/bill/admin',
         method: 'get',

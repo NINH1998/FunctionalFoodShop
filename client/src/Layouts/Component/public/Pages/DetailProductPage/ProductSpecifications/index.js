@@ -101,15 +101,21 @@ const ProductSpecifications = ({ product, current, dispatch, currentCart, tagPro
             <ul className="flex flex-col gap-3 text-base">
                 {detailProductInfoList.map((el, index) => (
                     <li key={index}>
-                        <strong>{el.title}</strong>
-                        <span className="text-primary">{el.value}</span>
+                        {el.value && (
+                            <>
+                                <strong>{el.title}</strong>
+                                <span className="text-primary">{el.value}</span>
+                            </>
+                        )}
                     </li>
                 ))}
             </ul>
-            <div className="mt-4">
-                <strong>Mô tả:</strong>
-            </div>
-            <p className="my-2 text-base max-h-[300px] overflow-auto">{product?.uses}</p>
+            {product?.uses !== '' && (
+                <div className="mt-4">
+                    <strong>Mô tả:</strong>
+                    <p className="my-2 text-base max-h-[300px]">{product?.uses}</p>
+                </div>
+            )}
             <div className="mt-6 flex flex-col gap-2">
                 <label htmlFor="quantity" className="font-bold">
                     Số lượng:

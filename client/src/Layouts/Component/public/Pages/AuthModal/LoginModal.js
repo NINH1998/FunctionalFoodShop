@@ -81,6 +81,12 @@ const LoginModal = ({ dispatch, useSelector }) => {
         // eslint-disable-next-line
     }, [payload, isRegister]);
 
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter' && !isRegister) {
+            handleSubmit();
+        }
+    };
+
     const handleLoginGoogle = () => {
         window.open(process.env.REACT_APP_URL_GOOGLE_LOGIN, '_self');
     };
@@ -133,6 +139,7 @@ const LoginModal = ({ dispatch, useSelector }) => {
                                     setValue={setPayload}
                                     invalidField={invalidField}
                                     label
+                                    onKeyDown={handleKeyPress}
                                 />
                                 <InputField
                                     value={payload.password}
@@ -141,6 +148,7 @@ const LoginModal = ({ dispatch, useSelector }) => {
                                     type="password"
                                     invalidField={invalidField}
                                     label
+                                    onKeyDown={handleKeyPress}
                                 />
                                 <Button fw handleOnclick={handleSubmit}>
                                     {isRegister ? 'Đăng kí' : 'Đăng nhập'}

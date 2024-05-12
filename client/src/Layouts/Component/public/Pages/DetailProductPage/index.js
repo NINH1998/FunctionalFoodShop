@@ -70,47 +70,55 @@ const DetailProductPage = ({ dispatch, location }) => {
                     <BreadCrumb pid={pid} isDetailPage />
                 </div>
             </div>
-            <div className="justify-center p-6 relative w-full">
-                <div className="flex gap-10 tablet:flex-row phone:flex-col bg-white rounded-lg desktop:w-main phone:w-full m-auto h-full ">
-                    <SliderDetailProduct product={product} isLoadingProduct={isLoadingProduct} />
-                    <ProductSpecifications product={product} tagProduct={tagProduct} />
+            {isLoadingProduct ? (
+                <div className="flex justify-center">
+                    <div className="h-screen w-main bg-gray-200 rounded-lg animate-pulse my-3"></div>
                 </div>
-                <div className="desktop:w-main m-auto tablet:p-4 phone:mt-6 tablet:mt-2">
-                    <InfomationDetailProduct
-                        totalRatings={product?.totalRatings}
-                        ratings={product?.ratings}
-                        productName={product?.title}
-                        pid={product?._id}
-                        setUpdateRating={setUpdateRating}
-                        description={product?.description}
-                        fetchProduct={fetchProduct}
-                    />
-                </div>
-                <div className="relative desktop:w-main mx-auto mb-6">
-                    <div className="p-4">
-                        <div className="flex justify-start items-center border-b-[2px] border-primary mb-12 mx-auto">
-                            <div className="flex gap-2 items-center bg-gray-200 px-4 py-1 rounded-tl-lg rounded-tr-lg">
-                                <img src={Images.BestSeller} alt="" className="h-8 w-8 object-cover"></img>
-                                <h4 className="text-primary text-base font-semibold font-roboto">Sản phẩm liên quan</h4>
+            ) : (
+                <div className="justify-center p-6 relative w-full">
+                    <div className="flex gap-10 tablet:flex-row phone:flex-col bg-white rounded-lg desktop:w-main phone:w-full m-auto h-full ">
+                        <SliderDetailProduct product={product} />
+                        <ProductSpecifications product={product} tagProduct={tagProduct} />
+                    </div>
+                    <div className="desktop:w-main m-auto tablet:p-4 phone:mt-6 tablet:mt-2">
+                        <InfomationDetailProduct
+                            totalRatings={product?.totalRatings}
+                            ratings={product?.ratings}
+                            productName={product?.title}
+                            pid={product?._id}
+                            setUpdateRating={setUpdateRating}
+                            description={product?.description}
+                            fetchProduct={fetchProduct}
+                        />
+                    </div>
+                    <div className="relative desktop:w-main mx-auto mb-6">
+                        <div className="p-4">
+                            <div className="flex justify-start items-center border-b-[2px] border-primary mb-12 mx-auto">
+                                <div className="flex gap-2 items-center bg-gray-200 px-4 py-1 rounded-tl-lg rounded-tr-lg">
+                                    <img src={Images.BestSeller} alt="" className="h-8 w-8 object-cover"></img>
+                                    <h4 className="text-primary text-base font-semibold font-roboto">
+                                        Sản phẩm liên quan
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex justify-center flex-wrap w-full">
+                            <div className="desktop:w-main phone:w-full products">
+                                <CustomSwiper
+                                    spaceBetween={20}
+                                    navigation={true}
+                                    slidesPerView={5}
+                                    slidesPerViewLg={4}
+                                    slidesPerViewMd={3}
+                                    slidesPerViewSm={2}
+                                    loop={true}
+                                    arrayData={relativeProducts}
+                                />
                             </div>
                         </div>
                     </div>
-                    <div className="flex justify-center flex-wrap w-full">
-                        <div className="desktop:w-main phone:w-full products">
-                            <CustomSwiper
-                                spaceBetween={20}
-                                navigation={true}
-                                slidesPerView={5}
-                                slidesPerViewLg={4}
-                                slidesPerViewMd={3}
-                                slidesPerViewSm={2}
-                                loop={true}
-                                arrayData={relativeProducts}
-                            />
-                        </div>
-                    </div>
                 </div>
-            </div>
+            )}
         </div>
     );
 };

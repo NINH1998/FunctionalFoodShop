@@ -29,7 +29,7 @@ import {
 } from 'react-icons/fa';
 import { FaPlus, FaMinus } from 'react-icons/fa6';
 import { RxReset } from 'react-icons/rx';
-import { IoSearch, IoHomeSharp } from 'react-icons/io5';
+import { IoSearch, IoHomeSharp, IoNotifications } from 'react-icons/io5';
 import {
     IoMdClose,
     IoIosLogOut,
@@ -126,6 +126,7 @@ export const Icons = {
     FaTruck,
     IoIosSave,
     IoLogoGoogleplus,
+    IoNotifications,
     FaBackspace,
     BsThreeDots,
 };

@@ -199,7 +199,7 @@ export const ratingStar = [
 export const detailProductInfo = (product) => [
     { title: 'Thương hiệu:', value: product?.brand },
     { title: 'Số lượng còn:', value: product?.quantity },
-    { title: 'Đã bán:', value: product?.sold },
+    { title: 'Đã bán:', value: product?.sold > 0 ? product?.sold : null },
     { title: 'Xuất xứ:', value: product?.origin },
     { title: 'Đơn vị:', value: product?.unitCalculation },
 ];

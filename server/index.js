@@ -15,14 +15,35 @@ const User = require('./Routes/User');
 const Brand = require('./Routes/Brand');
 const Coupon = require('./Routes/Coupon');
 const Bill = require('./Routes/Bill');
+const BillSchema = require('./Model/Bill');
 const Comments = require('./Routes/Comments');
 const Insert = require('./Routes/ScrapersData');
 const Tag = require('./Routes/Tag');
+const SocketManager = require('./Helper/SocketManager');
 
 const passportRouter = require('./Routes/Passport');
 const { scheduleWeekTask, scheduleDailyTask } = require('./Schedule/ScheduleDailyTask');
 
 env.config();
+
+const http = require('http').createServer(app);
+
+const socketIo = require('socket.io')(http, {
+    cors: {
+        origin: 'http://localhost:3000',
+        methods: ['GET', 'POST'],
+    },
+});
+
+socketIo.on('connection', (socket) => {
+    console.log('Client connected');
+
+    SocketManager.notifyAdminAboutNewBill(socket);
+
+    socket.on('disconnect', () => {
+        console.log('Client disconnected');
+    });
+});
 
 const connectDB = async () => {
     try {
@@ -45,6 +66,7 @@ connectDB();
 scheduleWeekTask();
 scheduleDailyTask();
 
+app.set('socketIo', socketIo);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
@@ -73,4 +95,4 @@ app.use('/api/insert', Insert);
 app.use('/api/tag', Tag);
 
 const PORT = 5000;
-app.listen(PORT, () => console.log(`listening on port ${PORT}`));
+http.listen(PORT, () => console.log(`listening on port ${PORT}`));

@@ -55,7 +55,7 @@ const CreateProduct = ({ dispatch }) => {
         if (id === 'mainCategory') {
             setSubCategory(null);
             const valueSelect = selectedOption.value;
-            const mainCategorySelected = categories.find((el) => el.title === valueSelect);
+            const mainCategorySelected = categories.find((el) => el._id === valueSelect);
             dispatch(setSelectedListCategory(mainCategorySelected ? mainCategorySelected.listCategory : []));
         } else setSubCategory(selectedOption.value);
     };

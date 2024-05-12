@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import { useSearchParams, createSearchParams } from 'react-router-dom';
-import { apiGetBill, apiUpdateStatusBill } from 'Context/StoreApi';
+import { apiGetBillsByUser, apiUpdateStatusBill } from 'Context/StoreApi';
 import { Pagination, Space } from 'antd';
 import { statusBill } from 'Ultils/Contants';
 import { Loading } from 'Layouts/Component/public/Common';
@@ -24,7 +24,7 @@ const BillHistory = ({ navigate, location }) => {
 
     const handleSearchBill = async (data) => {
         setIsLoading(true);
-        const response = await apiGetBill(data);
+        const response = await apiGetBillsByUser(data);
         setIsLoading(false);
         if (response.success) {
             setBills(response.bill);

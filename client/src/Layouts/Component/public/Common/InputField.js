@@ -43,7 +43,7 @@ const InputField = ({
                 placeholder={placeholder ? placeholder : nameKey?.slice(0, 1).toUpperCase() + nameKey?.slice(1)}
                 value={value}
                 onChange={(e) => setValue((prev) => ({ ...prev, [nameKey]: e.target.value }))}
-                onKeyDown={onKeyDown && onKeyDown}
+                onKeyDown={onKeyDown ? onKeyDown : null}
                 onFocus={() => dispatch(setInvalidField(''))}
             />
             {invalidField?.some((el) => el.name === nameKey) && (

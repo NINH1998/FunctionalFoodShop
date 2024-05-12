@@ -34,7 +34,7 @@ const ManageProducts = ({ navigate, location }) => {
     };
 
     const debounceValue = useDebounce(value.q, 500);
-    useEffect(() => {
+    useLayoutEffect(() => {
         const queries = Object.fromEntries([...params]);
         if (queries.q) {
             queries.q = debounceValue;

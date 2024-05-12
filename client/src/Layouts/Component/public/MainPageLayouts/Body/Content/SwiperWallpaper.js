@@ -9,10 +9,11 @@ const SwiperWallpaper = () => {
                 styles={'w-full h-[400px] object-cover'}
                 navigation={true}
                 slidesPerView={1}
-                loop={true}
                 effect={'fade'}
+                loop={true}
                 arrayData={images}
                 isThumb="main"
+                autoplay
             ></CustomSwiper>
         </div>
     );

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { apiGetProducts } from 'Context/StoreApi/Products';
 import { directCategory, filterProductsByTag } from 'Context/Reducer/Products/ProductsAction';
 import { Link } from 'react-router-dom';
-import SliderLoading from './SliderLoading';
+import ProductLoading from './ProductLoading';
 import withComponent from 'Hocs/withComponent';
 import CustomSwiper from 'Layouts/Component/public/Common/CustomSwiper';
 import path from 'Router/path';
@@ -48,7 +48,7 @@ const ProductsSwiperBySort = ({ tag, dispatch }) => {
                     </div>
                 )}
                 {isLoading ? (
-                    <SliderLoading />
+                    <ProductLoading />
                 ) : (
                     <div className="relative desktop:w-main laptop:w-full max-laptop:px-4 products">
                         <CustomSwiper
@@ -58,7 +58,6 @@ const ProductsSwiperBySort = ({ tag, dispatch }) => {
                             slidesPerViewLg={4}
                             slidesPerViewMd={3}
                             slidesPerViewSm={2}
-                            loop={true}
                             arrayData={products}
                         />
                     </div>

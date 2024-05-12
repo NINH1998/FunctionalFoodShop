@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import { useSearchParams, createSearchParams } from 'react-router-dom';
-import { apiGetBills, apiUpdateStatusBill } from 'Context/StoreApi';
+import { apiGetBillsByAdmin, apiUpdateStatusBill } from 'Context/StoreApi';
 import { Pagination, Space } from 'antd';
 import { statusBill } from 'Ultils/Contants';
 import { Loading } from 'Layouts/Component/public/Common';
@@ -22,9 +22,9 @@ const ManageBill = ({ navigate, location }) => {
         setUpdate(!update);
     }, [update]);
 
-    const handleSearchBills = async (data) => {
+    const handleGetBills = async (data) => {
         setIsLoading(true);
-        const response = await apiGetBills(data);
+        const response = await apiGetBillsByAdmin(data);
         setIsLoading(false);
         if (response.success) {
             setBills(response.bills);
@@ -58,13 +58,13 @@ const ManageBill = ({ navigate, location }) => {
 
     useEffect(() => {
         const queries = Object.fromEntries([...params]);
-        handleSearchBills(queries);
+        handleGetBills(queries);
         // eslint-disable-next-line
     }, [params, update]);
 
     useLayoutEffect(() => {
         const queries = Object.fromEntries([...params]);
-        if (!queries.page) handleSearchBills();
+        if (!queries.page) handleGetBills();
         // eslint-disable-next-line
     }, []);
 
@@ -81,7 +81,7 @@ const ManageBill = ({ navigate, location }) => {
             { replace: true },
         );
 
-        handleSearchBills(queries);
+        handleGetBills(queries);
     };
 
     useLayoutEffect(() => {

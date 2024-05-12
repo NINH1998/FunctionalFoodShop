@@ -1,4 +1,4 @@
-import { Navigation, Pagination, A11y, EffectFade, FreeMode, Thumbs } from 'swiper/modules';
+import { Navigation, Pagination, A11y, EffectFade, FreeMode, Thumbs, Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { React } from 'react';
 import { memo } from 'react';
@@ -27,6 +27,7 @@ const CustomSwiper = ({
     freeMode,
     watchSlidesProgress,
     isThumb,
+    autoplay,
 }) => {
     return (
         <div className="relative">
@@ -34,7 +35,8 @@ const CustomSwiper = ({
                 slidesPerView={slidesPerView}
                 spaceBetween={spaceBetween}
                 navigation={navigation}
-                modules={[Navigation, Pagination, A11y, EffectFade, FreeMode, Thumbs]}
+                loop={loop ? loop : null}
+                modules={[Navigation, Pagination, A11y, EffectFade, FreeMode, Thumbs, Autoplay]}
                 breakpoints={{
                     0: {
                         slidesPerView: phone || 1,
@@ -53,6 +55,7 @@ const CustomSwiper = ({
                     },
                 }}
                 effect={effect}
+                autoplay={autoplay && { delay: 3000, disableOnInteraction: false }}
                 freeMode={freeMode}
                 watchSlidesProgress={watchSlidesProgress}
                 onSwiper={onSwiper}

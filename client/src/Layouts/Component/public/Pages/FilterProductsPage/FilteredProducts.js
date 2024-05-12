@@ -6,7 +6,7 @@ import { Icons } from 'Layouts/Assets/icons';
 import { t } from 'i18next';
 import FilterFunction from './FilterFunction';
 import ReactPaginate from 'react-paginate';
-import SliderLoading from '../../MainPageLayouts/Body/Content/SliderLoading';
+import ProductLoading from '../../MainPageLayouts/Body/Content/ProductLoading';
 import withComponent from 'Hocs/withComponent';
 import IconsButton from '../../Common/IconsButton';
 import Product from '../../MainPageLayouts/Body/Content/Product/ProductContainer';
@@ -160,7 +160,7 @@ const FilteredProducts = ({ dispatch, navigate, location }) => {
             <div className="relative desktop:w-main phone:w-full">
                 <div className="relative desktop:w-main phone:w-full">
                     {isLoading ? (
-                        <SliderLoading
+                        <ProductLoading
                             numberItem={12}
                             styles="grid desktop:grid-cols-4 phone:grid-cols-1 iPadmini:grid-cols-2 tablet:grid-cols-3 gap-10"
                         />

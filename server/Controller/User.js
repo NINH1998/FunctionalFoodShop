@@ -93,7 +93,6 @@ const updateUser = async (req, res) => {
         );
         return res.status(200).json({ success: true, message: 'Cập nhật thông tin thành công', updateUser: response });
     } catch (error) {
-        console.log(error);
         return res.status(500).json({ success: false, message: 'Lỗi, Không cập nhập được thông tin' });
     }
 };
@@ -143,7 +142,6 @@ const register = async (req, res) => {
         const user = new User({ email, password, lastname, firstname, phone, otp, otpExpiration });
         await user.save();
         const html = `<p>Otp sẽ hết hạn sau 1 phút</p><br/><h2>Register code:</h2><br/><h1 style="color:orange">${otp}</h1>`;
-        console.log(email);
         await sendMail({ email, html, subject: 'Hoàn tất đăng kí' });
 
         schedule.scheduleJob(otpExpiration, async () => {
@@ -153,7 +151,6 @@ const register = async (req, res) => {
 
         return res.status(200).json({ success: true, message: 'Kiểm tra email của bạn' });
     } catch (error) {
-        console.log(error);
         return res.status(500).json({ success: false, message: 'bruh' });
     }
 };

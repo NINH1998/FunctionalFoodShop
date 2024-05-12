@@ -41,7 +41,7 @@ const UpdateProduct = ({ editProduct, render, setEditProduct, dispatch, useSelec
             brand: editProduct?.brand || '',
             origin: editProduct?.origin || '',
             unitCalculation: editProduct?.unitCalculation || '',
-            mainCategory: editProduct?.mainCategory[0]._id || '',
+            mainCategory: editProduct?.mainCategory[0]?._id || '',
             category: editProduct?.category || '',
             uses: editProduct?.uses || '',
             percentage: editProduct?.discount?.percentage || '',
@@ -89,7 +89,7 @@ const UpdateProduct = ({ editProduct, render, setEditProduct, dispatch, useSelec
         setValue(id, selectedOption.value);
         if (id === 'mainCategory') {
             const valueSelect = selectedOption.value;
-            const mainCategorySelected = categories.find((el) => el.title === valueSelect);
+            const mainCategorySelected = categories.find((el) => el._id === valueSelect);
             dispatch(setSelectedListCategory(mainCategorySelected ? mainCategorySelected.listCategory : []));
         } else setSubCategory(selectedOption.value);
     };
@@ -168,7 +168,6 @@ const UpdateProduct = ({ editProduct, render, setEditProduct, dispatch, useSelec
                             register={register}
                             errors={errors}
                             id={'unitCalculation'}
-                            validate={{ required: 'Không được để trống' }}
                             fullwidth
                             placeholder={'Nhập đơn vị bán (Lọ, viên, cái..vv)...'}
                         />
@@ -198,7 +197,6 @@ const UpdateProduct = ({ editProduct, render, setEditProduct, dispatch, useSelec
                             register={register}
                             errors={errors}
                             id={'brand'}
-                            validate={{ required: 'Không được để trống' }}
                             fullwidth
                             placeholder={'Nhập tên nhãn hàng...'}
                         />
@@ -217,7 +215,7 @@ const UpdateProduct = ({ editProduct, render, setEditProduct, dispatch, useSelec
                             options={categories?.map((el) => ({ value: el._id, label: el.title }))}
                             defaultValue={{
                                 value: editProduct?.mainCategory[0]?._id,
-                                label: editProduct?.mainCategory[0].title,
+                                label: editProduct?.mainCategory[0]?.title,
                             }}
                         />
                         <CustomSelect
@@ -244,7 +242,6 @@ const UpdateProduct = ({ editProduct, render, setEditProduct, dispatch, useSelec
                             register={register}
                             errors={errors}
                             id={'uses'}
-                            validate={{ required: 'Không được để trống' }}
                             fullwidth
                             placeholder={'Nhập mô tả phụ...'}
                         />

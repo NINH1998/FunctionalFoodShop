@@ -29,12 +29,12 @@ const ProductsTable = ({ products, currentPage, handleEdit, handleDeleteProduct 
                         <th className="p-4 font-normal break-words">
                             {(currentPage > 1 && currentPage - 1) * +process.env.REACT_APP_PRODUCT_MANAGE + index + 1}
                         </th>
-                        <th>
-                            <img src={el.thumb} alt="" className="object-cover w-[70px] h-[70px]" />
+                        <th className="p-4">
+                            <img src={el.thumb} alt="" className="object-cover min-w-[70px] h-[70px]" />
                         </th>
                         <th className="p-4 break-words font-semibold">{el.title}</th>
                         <th className="p-4 font-normal break-words">{el.brand}</th>
-                        <th className="p-4 font-normal break-words">{el.category}</th>
+                        <th className="p-4 font-normal whitespace-nowrap">{el.category}</th>
                         <th className="p-4 font-normal break-words">{el.price}</th>
                         <th className="p-4 font-normal break-words">{el.quantity}</th>
                         <th className="p-4 font-normal break-words">{el.sold}</th>

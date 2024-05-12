@@ -1,7 +1,7 @@
 const StoreSchema = require('../Model/Product');
 const categoryProducts = require('../Model/CategoryProducts');
 const slugify = require('slugify');
-const scraperData = require('../ScraperData/ProductDetailData.json');
+// const scraperData = require('../ScraperData/ProductDetailData.json');
 
 const createProduct = async (product) =>
     new Promise(async (resolve, reject) => {
@@ -38,11 +38,8 @@ const insertProduct = async (req, res) => {
 
 const editPRoduct = async (req, res) => {
     try {
-        const products = await StoreSchema.find();
-        for (const product of products) {
-            product.discountedPrice = Math.round(product.price * (1 - product.discount.percentage / 100));
-            product.save();
-        }
+        await StoreSchema.updateMany({ quantity: 10 });
+
         return res.status(200).json({ message: 'Done!' });
     } catch (error) {
         console.log(error);
