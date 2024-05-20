@@ -19,7 +19,7 @@ import SearchBar from './SearchFunction/SearchBar';
 import path from 'Router/path';
 import Swal from 'sweetalert2';
 
-const { TiThMenu, IoNotifications } = Icons;
+const { TiThMenu } = Icons;
 
 const NavBar = ({ dispatch, location, navigate, current }) => {
     const { mes } = useSelector((state) => state.userReducer);
@@ -110,7 +110,7 @@ const NavBar = ({ dispatch, location, navigate, current }) => {
         }
         // eslint-disable-next-line
     }, [isSearch]);
-    console.log(current);
+
     return (
         <div className="relative w-full">
             <div className="fixed top-0 z-[988] w-screen shadow-small bg-white">

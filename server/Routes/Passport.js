@@ -12,7 +12,6 @@ router.get('/google/callback', passport.authenticate('google', { failureRedirect
 
 router.get('/login-google', async (req, res) => {
     const id = req?.user?.id;
-
     if (id) {
         try {
             const response = await User.findOne({ googleId: id });

@@ -11,7 +11,7 @@ passport.use(
             scope: ['profile', 'email'],
         },
         async (accessToken, refreshToken, profile, done) => {
-            const user = await User.findOne({ googleId: profile.id });
+            const user = await User.findOne({ googleId: profile.id, email: profile.emails[0].value });
             if (!user) {
                 const newUser = new User({
                     googleId: profile.id,

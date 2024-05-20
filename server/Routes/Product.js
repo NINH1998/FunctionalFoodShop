@@ -4,7 +4,6 @@ const Product = require('../Controller/Product');
 const { verifyAccessToken, isAdmin } = require('../Middleware/VerifyToken');
 const upload = require('../Config/Cloudinary.config');
 
-// POST Product information
 router.get('/', Product.fetchProducts);
 router.get('/:pid', Product.getProduct);
 
